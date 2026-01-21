@@ -1,0 +1,13 @@
+node_modules/
+build/
+dist/
+.DS_Store
+
+# Vite env files (do not commit secrets)
+.env
+.env.*
+
+# Local editor/system
+.vscode/
+.idea/
+
