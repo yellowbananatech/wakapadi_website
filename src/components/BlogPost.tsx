@@ -180,10 +180,13 @@ export function BlogPost({ onNavigate, postId }: BlogPostProps) {
             </p>
             <Button
               size="lg"
-              onClick={() => onNavigate('booking')}
-              className="bg-primary hover:bg-primary/90 text-white rounded-xl px-8 h-14"
+              onClick={() => window.open('https://selar.com/wakapadixveev', '_blank')}
+              className="text-white rounded-xl px-8 h-14"
+              style={{ backgroundColor: '#2894ca' }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2278a8'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2894ca'}
             >
-              Book Strategy Call
+              Start Your Journey
             </Button>
           </div>
 

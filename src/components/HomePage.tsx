@@ -136,16 +136,11 @@ export function HomePage({ onNavigate }: HomePageProps) {
             <div className="flex flex-col sm:flex-row items-start gap-4 mb-10">
               <Button 
                 size="lg"
-                onClick={() => onNavigate('booking')}
-                className="bg-primary hover:bg-primary/90 text-white rounded-xl px-8 h-14 text-base"
-              >
-                Book Strategy Call
-              </Button>
-              <Button 
-                size="lg"
-                variant="outline"
-                onClick={() => onNavigate('services')}
-                className="border-2 border-slate-200 text-slate-900 hover:bg-slate-50 rounded-xl px-8 h-14 text-base"
+                onClick={() => window.open('https://selar.com/wakapadixveev', '_blank')}
+                className="text-white rounded-xl px-8 h-14 text-base"
+                style={{ backgroundColor: '#2894ca' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2278a8'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2894ca'}
               >
                 Start Your Journey
               </Button>
@@ -318,15 +313,18 @@ export function HomePage({ onNavigate }: HomePageProps) {
               Ready to Start Your Journey?
             </h2>
             <p className="text-xl text-slate-600 mb-12 leading-relaxed">
-              Book a strategy call today and let our experts guide you towards your global mobility goals
+              Start your journey today and let our experts guide you towards your global mobility goals
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button
                 size="lg"
-                onClick={() => onNavigate('booking')}
-                className="bg-primary hover:bg-primary/90 text-white rounded-xl px-8 h-14 text-base"
+                onClick={() => window.open('https://selar.com/wakapadixveev', '_blank')}
+                className="text-white rounded-xl px-8 h-14 text-base"
+                style={{ backgroundColor: '#2894ca' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2278a8'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2894ca'}
               >
-                Book Strategy Call
+                Start Your Journey
               </Button>
               <Button
                 size="lg"

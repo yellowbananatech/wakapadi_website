@@ -427,19 +427,15 @@ export default function App() {
           />
         );
       
-      case 'booking':
-      case 'assessment':
       case 'contact':
         return (
           <div className="min-h-screen pt-20 bg-slate-50 flex items-center justify-center px-4">
             <div className="max-w-2xl mx-auto text-center py-20">
               <h1 className="text-4xl font-bold text-slate-900 mb-6">
-                {currentPage === 'booking' && 'Book a Strategy Call'}
-                {currentPage === 'assessment' && 'Get Your Free Assessment'}
-                {currentPage === 'contact' && 'Contact Us'}
+                Contact Us
               </h1>
               <p className="text-xl text-slate-600 mb-8">
-                This is a demo page. In production, this would include a full {currentPage} form.
+                This is a demo page. In production, this would include a full contact form.
               </p>
               <button
                 onClick={() => handleNavigation('home')}

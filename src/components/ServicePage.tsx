@@ -44,8 +44,11 @@ export function ServicePage({ service, onNavigate }: ServicePageProps) {
             </p>
             <Button
               size="lg"
-              onClick={() => onNavigate('assessment')}
-              className="bg-primary hover:bg-primary/90 text-white rounded-xl px-8 h-14 text-base"
+              onClick={() => window.open('https://selar.com/wakapadixveev', '_blank')}
+              className="text-white rounded-xl px-8 h-14 text-base"
+              style={{ backgroundColor: '#2894ca' }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2278a8'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2894ca'}
             >
               Get Assessed
             </Button>
@@ -169,18 +172,13 @@ export function ServicePage({ service, onNavigate }: ServicePageProps) {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button
                 size="lg"
-                onClick={() => onNavigate('assessment')}
-                className="bg-primary hover:bg-primary/90 text-white rounded-xl px-8 h-14 text-base"
+                onClick={() => window.open('https://selar.com/wakapadixveev', '_blank')}
+                className="text-white rounded-xl px-8 h-14 text-base"
+                style={{ backgroundColor: '#2894ca' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2278a8'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2894ca'}
               >
                 Get Assessed Now
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                onClick={() => onNavigate('booking')}
-                className="border-2 border-slate-200 text-slate-900 hover:bg-slate-50 rounded-xl px-8 h-14 text-base"
-              >
-                Book Consultation
               </Button>
             </div>
           </motion.div>

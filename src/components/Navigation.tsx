@@ -208,10 +208,13 @@ export function Navigation({ onNavigate, currentPage, isLoggedIn, isAdmin, onLog
 
               <div className="hidden lg:block">
                 <Button
-                  onClick={() => onNavigate('booking')}
-                  className="bg-primary hover:bg-primary/90 text-white rounded-xl px-6"
+                  onClick={() => window.open('https://selar.com/wakapadixveev', '_blank')}
+                  className="text-white rounded-xl px-6"
+                  style={{ backgroundColor: '#2894ca' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2278a8'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2894ca'}
                 >
-                  Book Call
+                  Start Your Journey
                 </Button>
               </div>
 
@@ -333,12 +336,15 @@ export function Navigation({ onNavigate, currentPage, isLoggedIn, isAdmin, onLog
 
               <Button
                 onClick={() => {
-                  onNavigate('booking');
+                  window.open('https://selar.com/wakapadixveev', '_blank');
                   setMobileMenuOpen(false);
                 }}
-                className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl mt-4"
+                className="w-full text-white rounded-xl mt-4"
+                style={{ backgroundColor: '#2894ca' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2278a8'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2894ca'}
               >
-                Book Strategy Call
+                Start Your Journey
               </Button>
             </div>
           </div>

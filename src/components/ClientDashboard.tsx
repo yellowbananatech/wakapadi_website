@@ -289,11 +289,11 @@ export function ClientDashboard({ onNavigate }: ClientDashboardProps) {
                 </button>
 
                 <button 
-                  onClick={() => onNavigate('booking')}
+                  onClick={() => window.open('https://selar.com/wakapadixveev', '_blank')}
                   className="glass rounded-xl p-6 text-left hover:shadow-lg transition-all"
                 >
-                  <div className="font-semibold text-slate-900 mb-1">Book Call</div>
-                  <div className="text-sm text-slate-600">Schedule a consultation</div>
+                  <div className="font-semibold text-slate-900 mb-1">Start Your Journey</div>
+                  <div className="text-sm text-slate-600">Begin your global mobility journey</div>
                 </button>
               </div>
             </div>
