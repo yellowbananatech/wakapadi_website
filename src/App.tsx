@@ -7,10 +7,13 @@ import { ServicePage } from './components/ServicePage';
 import { BlogPage } from './components/BlogPage';
 import { BlogPost } from './components/BlogPost';
 import { PackagesPage } from './components/PackagesPage';
+import { PackageDetails } from './components/PackageDetails';
 import { ClientDashboard } from './components/ClientDashboard';
 import { AdminDashboard } from './components/AdminDashboard';
 import { LoginPage } from './components/LoginPage';
 import { PaymentSuccess } from './components/PaymentSuccess';
+import { TermsPage } from './components/TermsPage';
+import { ContactPage } from './components/ContactPage';
 import { supabase } from './lib/supabaseClient';
 
 // Local minimal session shape to avoid tight coupling to supabase-js types in this file.
@@ -23,6 +26,7 @@ type Session = {
 export default function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedBlogPostId, setSelectedBlogPostId] = useState<string | null>(null);
+  const [selectedPackageId, setSelectedPackageId] = useState<string | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -304,6 +308,8 @@ export default function App() {
     if (id) {
       if (page === 'blog-post') {
         setSelectedBlogPostId(id);
+      } else if (page === 'package-details') {
+        setSelectedPackageId(id);
       }
     }
     if (page === 'payment-success') {
@@ -388,8 +394,10 @@ export default function App() {
         return <BlogPost onNavigate={handleNavigation} postId={selectedBlogPostId ?? undefined} />;
       
       case 'packages':
-      case 'package-details':
         return <PackagesPage onNavigate={handleNavigation} />;
+      
+      case 'package-details':
+        return <PackageDetails packageId={selectedPackageId || ''} onNavigate={handleNavigation} />;
       
       case 'dashboard':
         return isLoggedIn ? (
@@ -428,24 +436,15 @@ export default function App() {
         );
       
       case 'contact':
-        return (
-          <div className="min-h-screen pt-20 bg-slate-50 flex items-center justify-center px-4">
-            <div className="max-w-2xl mx-auto text-center py-20">
-              <h1 className="text-4xl font-bold text-slate-900 mb-6">
-                Contact Us
-              </h1>
-              <p className="text-xl text-slate-600 mb-8">
-                This is a demo page. In production, this would include a full contact form.
-              </p>
-              <button
-                onClick={() => handleNavigation('home')}
-                className="text-primary hover:text-primary/80 font-semibold"
-              >
-                ← Back to Home
-              </button>
-            </div>
-          </div>
-        );
+        return <ContactPage onNavigate={handleNavigation} />;
+      
+      case 'terms':
+      case 'privacy':
+      case 'acceptable-use':
+      case 'refund':
+      case 'user-services':
+      case 'data-processing':
+        return <TermsPage onNavigate={handleNavigation} initialPage={currentPage} />;
       
       case 'payment-success':
         return <PaymentSuccess onNavigate={handleNavigation} />;
