@@ -10,6 +10,7 @@ import { PackagesPage } from './components/PackagesPage';
 import { ClientDashboard } from './components/ClientDashboard';
 import { AdminDashboard } from './components/AdminDashboard';
 import { LoginPage } from './components/LoginPage';
+import { PaymentSuccess } from './components/PaymentSuccess';
 import { supabase } from './lib/supabaseClient';
 
 // Local minimal session shape to avoid tight coupling to supabase-js types in this file.
@@ -35,6 +36,10 @@ export default function App() {
       const { data } = await supabase.auth.getSession();
       if (!mounted) return;
       setSession(data.session ?? null);
+
+      if (window.location.pathname === '/payment-success') {
+        setCurrentPage('payment-success');
+      }
     };
 
     void init();
@@ -301,6 +306,11 @@ export default function App() {
         setSelectedBlogPostId(id);
       }
     }
+    if (page === 'payment-success') {
+      window.history.pushState({}, '', `/payment-success${window.location.search}`);
+    } else {
+      window.history.pushState({}, '', '/');
+    }
     window.scrollTo(0, 0);
   };
 
@@ -440,6 +450,9 @@ export default function App() {
             </div>
           </div>
         );
+      
+      case 'payment-success':
+        return <PaymentSuccess onNavigate={handleNavigation} />;
       
       default:
         return <HomePage onNavigate={handleNavigation} />;
