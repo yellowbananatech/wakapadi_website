@@ -23,6 +23,86 @@ type Session = {
   };
 } | null;
 
+// Map internal page identifiers to URL paths (and optionally dynamic paths).
+const pageToPath: Record<string, string | ((id?: string) => string)> = {
+  home: '/',
+  'tourist-visa': '/tourist-visa',
+  'work-visa': '/work-visa',
+  'study-visa': '/study-visa',
+  'permanent-residency': '/permanent-residency',
+  citizenship: '/citizenship',
+  blog: '/blog',
+  'blog-post': (id?: string) => `/blog/${id ?? ''}`,
+  packages: '/packages',
+  'package-details': (id?: string) => `/packages/${id ?? ''}`,
+  dashboard: '/dashboard',
+  admin: '/admin',
+  login: '/login',
+  contact: '/contact',
+  terms: '/terms',
+  privacy: '/privacy',
+  'acceptable-use': '/acceptable-use',
+  refund: '/refund',
+  'user-services': '/user-services',
+  'data-processing': '/data-processing',
+  'payment-success': '/payment-success',
+};
+
+type ParsedLocation = {
+  page: string;
+  id?: string | null;
+};
+
+// Derive the internal page and optional id from the current pathname.
+function parseLocation(pathname: string): ParsedLocation {
+  let path = pathname || '/';
+
+  // Normalise trailing slash (except for root).
+  if (path.length > 1 && path.endsWith('/')) {
+    path = path.slice(0, -1);
+  }
+
+  if (path === '/') {
+    return { page: 'home' };
+  }
+
+  if (path === '/tourist-visa') return { page: 'tourist-visa' };
+  if (path === '/work-visa') return { page: 'work-visa' };
+  if (path === '/study-visa') return { page: 'study-visa' };
+  if (path === '/permanent-residency') return { page: 'permanent-residency' };
+  if (path === '/citizenship') return { page: 'citizenship' };
+
+  if (path === '/blog') return { page: 'blog' };
+  if (path.startsWith('/blog/')) {
+    const id = path.split('/')[2] ?? null;
+    return { page: 'blog-post', id };
+  }
+
+  if (path === '/packages') return { page: 'packages' };
+  if (path.startsWith('/packages/')) {
+    const id = path.split('/')[2] ?? null;
+    return { page: 'package-details', id };
+  }
+
+  if (path === '/dashboard') return { page: 'dashboard' };
+  if (path === '/admin') return { page: 'admin' };
+  if (path === '/login') return { page: 'login' };
+
+  if (path === '/contact') return { page: 'contact' };
+
+  if (path === '/terms') return { page: 'terms' };
+  if (path === '/privacy') return { page: 'privacy' };
+  if (path === '/acceptable-use') return { page: 'acceptable-use' };
+  if (path === '/refund') return { page: 'refund' };
+  if (path === '/user-services') return { page: 'user-services' };
+  if (path === '/data-processing') return { page: 'data-processing' };
+
+  if (path === '/payment-success') return { page: 'payment-success' };
+
+  // Fallback to home for unknown routes.
+  return { page: 'home' };
+}
+
 export default function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedBlogPostId, setSelectedBlogPostId] = useState<string | null>(null);
@@ -40,18 +120,14 @@ export default function App() {
       const { data } = await supabase.auth.getSession();
       if (!mounted) return;
       setSession(data.session ?? null);
-
-      if (window.location.pathname === '/payment-success') {
-        setCurrentPage('payment-success');
-      }
     };
 
     void init();
 
     const { data: subscription } = supabase.auth.onAuthStateChange(
       (_event: string, nextSession: Session) => {
-      if (!mounted) return;
-      setSession(nextSession);
+        if (!mounted) return;
+        setSession(nextSession);
       }
     );
 
@@ -88,6 +164,66 @@ export default function App() {
 
     void loadProfile();
   }, [session]);
+
+  // Sync initial route and browser history with the internal page state,
+  // and handle back/forward navigation via the popstate event.
+  useEffect(() => {
+    const applyLocationToState = () => {
+      const { page, id } = parseLocation(window.location.pathname);
+
+      setCurrentPage(page);
+
+      if (page === 'blog-post') {
+        setSelectedBlogPostId(id ?? null);
+      } else {
+        setSelectedBlogPostId(null);
+      }
+
+      if (page === 'package-details') {
+        setSelectedPackageId(id ?? null);
+      } else if (page !== 'packages') {
+        // Clear selected package when leaving detail view.
+        setSelectedPackageId(null);
+      }
+
+      // Ensure the initial history entry has a state payload so that
+      // popstate handlers can rely on event.state when navigating.
+      const state: ParsedLocation = { page, id: id ?? null };
+      const url = window.location.pathname + window.location.search;
+      window.history.replaceState(state, '', url);
+    };
+
+    applyLocationToState();
+
+    const handlePopState = (event: PopStateEvent) => {
+      const state = (event.state ?? null) as ParsedLocation | null;
+
+      if (state?.page) {
+        setCurrentPage(state.page);
+
+        if (state.page === 'blog-post') {
+          setSelectedBlogPostId(state.id ?? null);
+        } else {
+          setSelectedBlogPostId(null);
+        }
+
+        if (state.page === 'package-details') {
+          setSelectedPackageId(state.id ?? null);
+        } else if (state.page !== 'packages') {
+          setSelectedPackageId(null);
+        }
+      } else {
+        // Fallback: derive state from the current location if no history state is present.
+        applyLocationToState();
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
 
   // Service data for different visa/migration pages
   const serviceData: Record<string, any> = {
@@ -305,18 +441,34 @@ export default function App() {
 
   const handleNavigation = (page: string, id?: string) => {
     setCurrentPage(page);
-    if (id) {
-      if (page === 'blog-post') {
-        setSelectedBlogPostId(id);
-      } else if (page === 'package-details') {
-        setSelectedPackageId(id);
-      }
-    }
-    if (page === 'payment-success') {
-      window.history.pushState({}, '', `/payment-success${window.location.search}`);
+
+    if (page === 'blog-post') {
+      setSelectedBlogPostId(id ?? null);
     } else {
-      window.history.pushState({}, '', '/');
+      setSelectedBlogPostId(null);
     }
+
+    if (page === 'package-details') {
+      setSelectedPackageId(id ?? null);
+    } else if (page !== 'packages') {
+      setSelectedPackageId(null);
+    }
+
+    const mapping = pageToPath[page];
+    let nextPath = '/';
+
+    if (typeof mapping === 'function') {
+      nextPath = mapping(id);
+    } else if (typeof mapping === 'string') {
+      nextPath = mapping;
+    }
+
+    const currentUrl = window.location.pathname + window.location.search;
+    if (currentUrl !== nextPath) {
+      const state: ParsedLocation = { page, id: id ?? null };
+      window.history.pushState(state, '', nextPath);
+    }
+
     window.scrollTo(0, 0);
   };
 
@@ -367,7 +519,7 @@ export default function App() {
 
   const handleLogout = () => {
     void supabase.auth.signOut();
-    setCurrentPage('home');
+    handleNavigation('home');
   };
 
   const renderPage = () => {
