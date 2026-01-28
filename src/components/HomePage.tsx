@@ -1,15 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import { PACKAGES_LIST } from '../data/packages';
+import { detectCurrency, getPackagePrice, type CurrencyInfo } from '../utils/currency';
 
 interface HomePageProps {
-  onNavigate: (page: string) => void;
+  onNavigate: (page: string, id?: string) => void;
 }
+
+const FEATURED_PACKAGES_COUNT = 6;
 
 export function HomePage({ onNavigate }: HomePageProps) {
   const [payLoading, setPayLoading] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
+  const [currency, setCurrency] = useState<CurrencyInfo | null>(null);
+
+  useEffect(() => {
+    setCurrency(detectCurrency());
+  }, []);
+
+  const featuredPackages = PACKAGES_LIST.slice(0, FEATURED_PACKAGES_COUNT);
 
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
@@ -62,30 +73,6 @@ export function HomePage({ onNavigate }: HomePageProps) {
       title: 'Medical & Birth Tourism',
       description: 'Comprehensive healthcare and birth abroad packages',
       page: 'packages'
-    }
-  ];
-
-  const packages = [
-    {
-      title: 'Luxury Dubai Experience',
-      location: 'United Arab Emirates',
-      duration: '7 Days',
-      price: '$4,500',
-      image: 'https://images.unsplash.com/photo-1561501900-3701fa6a0864?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBob3RlbHxlbnwxfHx8fDE3Njg5MjY3MTN8MA&ixlib=rb-4.1.0&q=80&w=1080'
-    },
-    {
-      title: 'Medical Tourism Thailand',
-      location: 'Bangkok, Thailand',
-      duration: '14 Days',
-      price: '$6,800',
-      image: 'https://images.unsplash.com/photo-1519662978799-2f05096d3636?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBhcmNoaXRlY3R1cmV8ZW58MXx8fHwxNzY4ODc3OTUwfDA&ixlib=rb-4.1.0&q=80&w=1080'
-    },
-    {
-      title: 'Investment Tour Portugal',
-      location: 'Lisbon, Portugal',
-      duration: '7 Days',
-      price: '$3,200',
-      image: 'https://images.unsplash.com/photo-1604223190546-a43e4c7f29d7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb3VudGFpbiUyMGxhbmRzY2FwZXxlbnwxfHx8fDE3Njg4NDI2Nzh8MA&ixlib=rb-4.1.0&q=80&w=1080'
     }
   ];
 
@@ -223,44 +210,61 @@ export function HomePage({ onNavigate }: HomePageProps) {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {packages.map((pkg, index) => (
-              <motion.div
-                key={pkg.title}
-                {...fadeIn}
-                transition={{ delay: index * 0.1, duration: 0.6 }}
-              >
-                <div className="glass rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 group cursor-pointer">
-                  <div className="relative h-56 overflow-hidden">
-                    <ImageWithFallback
-                      src={pkg.image}
-                      alt={pkg.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-slate-900 px-4 py-2 rounded-full font-semibold text-sm">
-                      {pkg.price}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+            {featuredPackages.map((pkg, index) => {
+              const priceInfo = currency ? getPackagePrice(pkg.priceUsd, currency) : null;
+              return (
+                <motion.div
+                  key={pkg.id}
+                  {...fadeIn}
+                  transition={{ delay: index * 0.1, duration: 0.6 }}
+                  className="flex"
+                >
+                  <div className="glass rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 group flex flex-col w-full">
+                    <div className="relative h-56 overflow-hidden shrink-0">
+                      <ImageWithFallback
+                        src={pkg.image}
+                        alt={pkg.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      {priceInfo && (
+                        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-slate-900 px-4 py-2 rounded-full font-semibold text-sm">
+                          {priceInfo.formatted}
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-6 flex flex-col flex-1">
+                      <h3 className="text-xl font-semibold text-slate-900 mb-2 tracking-tight">
+                        {pkg.title}
+                      </h3>
+                      <div className="flex items-center justify-between text-sm text-slate-600 mb-4">
+                        <span>{pkg.location}</span>
+                        <span>{pkg.duration}</span>
+                      </div>
+                      <div className="mt-auto">
+                        <Button
+                          onClick={() => onNavigate('package-details', pkg.id)}
+                          variant="outline"
+                          className="w-full rounded-xl border-slate-200"
+                        >
+                          View Details
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold text-slate-900 mb-2 tracking-tight">
-                      {pkg.title}
-                    </h3>
-                    <div className="flex items-center justify-between text-sm text-slate-600 mb-4">
-                      <span>{pkg.location}</span>
-                      <span>{pkg.duration}</span>
-                    </div>
-                    <Button 
-                      onClick={() => onNavigate('packages')}
-                      variant="outline"
-                      className="w-full rounded-xl border-slate-200"
-                    >
-                      View Details
-                    </Button>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </div>
+          <motion.div {...fadeIn} className="mt-12 text-center">
+            <Button
+              onClick={() => onNavigate('packages')}
+              variant="outline"
+              className="rounded-xl border-slate-200 px-8"
+            >
+              View All Travel Packages
+            </Button>
+          </motion.div>
         </div>
       </section>
 
@@ -276,18 +280,19 @@ export function HomePage({ onNavigate }: HomePageProps) {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
             {testimonials.map((testimonial, index) => (
               <motion.div
                 key={testimonial.name}
                 {...fadeIn}
                 transition={{ delay: index * 0.1, duration: 0.6 }}
+                className="flex"
               >
-                <div className="glass rounded-2xl p-8 h-full">
-                  <p className="text-slate-700 mb-8 leading-relaxed text-lg">
+                <div className="glass rounded-2xl p-8 flex flex-col w-full">
+                  <p className="text-slate-700 mb-8 leading-relaxed text-lg flex-1">
                     "{testimonial.content}"
                   </p>
-                  <div className="border-t border-slate-200 pt-6">
+                  <div className="border-t border-slate-200 pt-6 mt-auto">
                     <div className="font-semibold text-slate-900 mb-1">
                       {testimonial.name}
                     </div>

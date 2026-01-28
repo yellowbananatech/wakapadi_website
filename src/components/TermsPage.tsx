@@ -519,7 +519,7 @@ export function TermsPage({ onNavigate, initialPage }: TermsPageProps) {
   return (
     <div className="min-h-screen pt-32 bg-white pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(220px,260px)_1fr] gap-6 lg:gap-12 xl:gap-16">
           {/* Sidebar Navigation */}
           <div className="lg:col-span-1">
             <motion.div
@@ -550,15 +550,15 @@ export function TermsPage({ onNavigate, initialPage }: TermsPageProps) {
           </div>
 
           {/* Main Content */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-1 lg:min-w-0">
             <motion.div
               key={activePage}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="glass rounded-2xl p-8 md:p-12"
+              className="glass rounded-2xl p-6 sm:p-8 md:p-10 lg:p-12 max-w-3xl"
             >
-              <h1 className="text-4xl md:text-5xl font-semibold text-slate-900 mb-8 tracking-tighter">
+              <h1 className="text-4xl md:text-5xl font-semibold text-slate-900 mb-6 lg:mb-8 tracking-tighter">
                 {currentPage.title}
               </h1>
               
