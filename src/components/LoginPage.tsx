@@ -17,9 +17,39 @@ export function LoginPage({ onAuth, onNavigate, isLoading, error }: LoginPagePro
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [name, setName] = useState('');
+  const [honeypot, setHoneypot] = useState(''); // Bot protection honeypot field
+  const [formStartTime] = useState(Date.now()); // Track form load time for timing check
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Bot protection: Check honeypot field (should be empty for real users)
+    if (honeypot !== '') {
+      console.warn('Bot detected: honeypot field filled');
+      return; // Silently reject - don't show error to bots
+    }
+
+    // Bot protection: Timing check - forms filled too quickly are suspicious
+    const formFillTime = Date.now() - formStartTime;
+    if (formFillTime < 2000) { // Less than 2 seconds is suspicious
+      console.warn('Bot detected: form filled too quickly');
+      setAuthError('Please fill out the form completely before submitting.');
+      return;
+    }
+
+    // Basic validation
+    if (!email || !password) {
+      setAuthError('Please fill in all required fields.');
+      return;
+    }
+
+    if (isSignUp && !name) {
+      setAuthError('Please enter your full name.');
+      return;
+    }
+
+    setSuccessMessage(null);
     void onAuth({
       mode: isSignUp ? 'signUp' : 'signIn',
       email,
@@ -50,6 +80,18 @@ export function LoginPage({ onAuth, onNavigate, isLoading, error }: LoginPagePro
           </div>
           
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Honeypot field for bot protection - hidden from users */}
+            <input
+              type="text"
+              name="website"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+              style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', opacity: 0, pointerEvents: 'none' }}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+            />
+            
             {isSignUp && (
               <div className="space-y-2">
                 <Label htmlFor="name">Full Name</Label>
@@ -61,6 +103,7 @@ export function LoginPage({ onAuth, onNavigate, isLoading, error }: LoginPagePro
                   onChange={(e) => setName(e.target.value)}
                   className="rounded-xl border-slate-200"
                   required
+                  autoComplete="name"
                 />
               </div>
             )}
@@ -75,6 +118,7 @@ export function LoginPage({ onAuth, onNavigate, isLoading, error }: LoginPagePro
                 onChange={(e) => setEmail(e.target.value)}
                 className="rounded-xl border-slate-200"
                 required
+                autoComplete="email"
               />
             </div>
 
@@ -89,6 +133,8 @@ export function LoginPage({ onAuth, onNavigate, isLoading, error }: LoginPagePro
                   onChange={(e) => setPassword(e.target.value)}
                   className="rounded-xl border-slate-200 pr-10"
                   required
+                  autoComplete={isSignUp ? 'new-password' : 'current-password'}
+                  minLength={6}
                 />
                 <button
                   type="button"
@@ -124,8 +170,18 @@ export function LoginPage({ onAuth, onNavigate, isLoading, error }: LoginPagePro
             </Button>
           </form>
 
+          {successMessage && (
+            <div className="mt-4 rounded-xl bg-green-50 text-green-700 px-4 py-3 text-sm">
+              {successMessage}
+            </div>
+          )}
+
           {error && (
-            <div className="mt-4 rounded-xl bg-red-50 text-red-700 px-4 py-3 text-sm">
+            <div className={`mt-4 rounded-xl px-4 py-3 text-sm ${
+              error.includes('Account created successfully') || error.includes('check your email')
+                ? 'bg-green-50 text-green-700'
+                : 'bg-red-50 text-red-700'
+            }`}>
               {error}
             </div>
           )}
@@ -134,7 +190,15 @@ export function LoginPage({ onAuth, onNavigate, isLoading, error }: LoginPagePro
             <p className="text-sm text-slate-600">
               {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
               <button
-                onClick={() => setIsSignUp(!isSignUp)}
+                type="button"
+                onClick={() => {
+                  setIsSignUp(!isSignUp);
+                  setEmail('');
+                  setPassword('');
+                  setName('');
+                  setHoneypot('');
+                  setSuccessMessage(null);
+                }}
                 className="text-primary hover:text-primary/80 font-semibold"
               >
                 {isSignUp ? 'Sign In' : 'Sign Up'}

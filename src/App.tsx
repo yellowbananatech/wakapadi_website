@@ -477,41 +477,83 @@ export default function App() {
     setAuthLoading(true);
     try {
       if (args.mode === 'signIn') {
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
           email: args.email,
           password: args.password,
         });
-        if (error) throw error;
+        
+        if (signInError) {
+          throw signInError;
+        }
+
+        // After successful sign-in, get the session and navigate
+        const { data: sessionData } = await supabase.auth.getSession();
+        const userId = sessionData?.session?.user?.id;
+        
+        if (userId) {
+          const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('is_admin')
+            .eq('id', userId)
+            .maybeSingle();
+          
+          if (profileError) {
+            console.error('Profile fetch error:', profileError);
+            // Don't block navigation if profile fetch fails
+          }
+          
+          setCurrentPage(profile?.is_admin ? 'admin' : 'dashboard');
+        } else {
+          throw new Error('Sign in successful but no session found. Please try again.');
+        }
       } else {
-        const { error } = await supabase.auth.signUp({
+        // Sign-up flow
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
           email: args.email,
           password: args.password,
           options: {
             data: {
               full_name: args.fullName ?? '',
             },
+            emailRedirectTo: window.location.origin,
           },
         });
-        if (error) throw error;
+        
+        if (signUpError) {
+          throw signUpError;
+        }
+
+        // Check if email confirmation is required
+        if (signUpData.user && !signUpData.session) {
+          // Email confirmation required - show success message
+          setAuthError('Account created successfully! Please check your email to confirm your account, then sign in.');
+          setAuthLoading(false);
+          // The error message will be displayed as a success-style message in LoginPage
+          return;
+        }
+
+        // If session exists immediately (email confirmation disabled), proceed to dashboard
+        if (signUpData.session) {
+          const userId = signUpData.user?.id;
+          if (userId) {
+            const { data: profile, error: profileError } = await supabase
+              .from('profiles')
+              .select('is_admin')
+              .eq('id', userId)
+              .maybeSingle();
+            
+            if (profileError) {
+              console.error('Profile fetch error:', profileError);
+            }
+            
+            setCurrentPage(profile?.is_admin ? 'admin' : 'dashboard');
+          }
+        }
       }
-
-      const { data } = await supabase.auth.getSession();
-      const userId = data.session?.user?.id;
-      if (!userId) {
-        setAuthError('Account created. Please check your email to confirm/sign in.');
-        return;
-      }
-
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('is_admin')
-        .eq('id', userId)
-        .maybeSingle();
-      if (profileError) throw profileError;
-
-      setCurrentPage(profile?.is_admin ? 'admin' : 'dashboard');
     } catch (e: any) {
-      setAuthError(e?.message ?? 'Authentication failed');
+      const errorMessage = e?.message ?? 'Authentication failed. Please try again.';
+      setAuthError(errorMessage);
+      console.error('Auth error:', e);
     } finally {
       setAuthLoading(false);
     }
