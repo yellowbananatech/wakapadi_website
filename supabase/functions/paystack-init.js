@@ -1,6 +1,23 @@
 const PAYSTACK_BASE_URL = 'https://api.paystack.co';
 const { verifyToken } = require('./verify-turnstile');
 
+function getSiteUrl() {
+  const url = process.env.PAYSTACK_CALLBACK_URL || process.env.URL || process.env.DEPLOY_PRIME_URL || process.env.SITE_URL;
+  if (!url) return 'http://localhost:3000';
+  try {
+    return new URL(url).origin;
+  } catch {
+    return url.replace(/\/$/, '');
+  }
+}
+
+function getCallbackUrl() {
+  if (process.env.PAYSTACK_CALLBACK_URL) {
+    return process.env.PAYSTACK_CALLBACK_URL;
+  }
+  return `${getSiteUrl()}/payment-success`;
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
@@ -23,7 +40,6 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ message: 'email and amount are required' }) };
   }
 
-  // Verify Turnstile token if present and secret key is configured
   if (process.env.TURNSTILE_SECRET_KEY) {
     if (!turnstileToken) {
       return { statusCode: 403, body: JSON.stringify({ message: 'Security verification required' }) };
@@ -38,8 +54,7 @@ exports.handler = async (event) => {
     }
   }
 
-  const siteUrl = process.env.URL || process.env.DEPLOY_PRIME_URL || 'http://localhost:3000';
-  const callbackUrl = `${siteUrl}/payment-success`;
+  const callbackUrl = getCallbackUrl();
 
   const res = await fetch(`${PAYSTACK_BASE_URL}/transaction/initialize`, {
     method: 'POST',

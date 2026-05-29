@@ -25,6 +25,16 @@ Use `ENV.example` as a template for required values:
 - `VITE_TURNSTILE_SITE_KEY`
 - `TURNSTILE_SECRET_KEY`
 
+Optional Paystack URL overrides:
+
+- `PAYSTACK_CALLBACK_URL` — live callback that Paystack should redirect to after successful payment
+- `PAYSTACK_WEBHOOK_URL` — live webhook URL to configure in the Paystack dashboard
+
+### Live Paystack URLs
+
+- Callback URL: `https://<YOUR_LIVE_DOMAIN>/payment-success`
+- Webhook URL: `https://<YOUR_LIVE_DOMAIN>/.netlify/functions/paystack-webhook`
+
 ## Supabase CLI workflow
 
 1. Log in:
