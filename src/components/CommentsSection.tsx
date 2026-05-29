@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { supabase } from '../lib/supabaseClient';
+import { CloudflareTurnstile } from './CloudflareTurnstile';
 type CommentRow = {
   id: string;
   post_id: string;
@@ -31,6 +32,15 @@ export function CommentsSection({ postId }: { postId: string }) {
   const [comments, setComments] = useState<UiComment[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+
+  const handleTurnstileVerify = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
 
   const formatAgo = (iso: string) => {
     const date = new Date(iso);
@@ -120,6 +130,10 @@ export function CommentsSection({ postId }: { postId: string }) {
         setError('Please sign in to comment.');
         return;
       }
+      if (!turnstileToken) {
+        setError('Please complete the security check.');
+        return;
+      }
       const content = newComment.trim();
       if (!content) return;
 
@@ -185,13 +199,20 @@ export function CommentsSection({ postId }: { postId: string }) {
           onChange={(e) => setNewComment(e.target.value)}
           className="mb-3 min-h-[100px] rounded-xl border-slate-200"
         />
-        <Button 
-          onClick={handleSubmitComment}
-          className="bg-primary hover:bg-primary/90 text-white rounded-xl"
-          disabled={loading}
-        >
-          Post Comment
-        </Button>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <CloudflareTurnstile
+            onVerify={handleTurnstileVerify}
+            onExpire={handleTurnstileExpire}
+            size="compact"
+          />
+          <Button 
+            onClick={handleSubmitComment}
+            className="bg-primary hover:bg-primary/90 text-white rounded-xl"
+            disabled={loading || !turnstileToken}
+          >
+            Post Comment
+          </Button>
+        </div>
       </div>
 
       {error && (

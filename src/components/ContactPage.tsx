@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
+import { CloudflareTurnstile } from './CloudflareTurnstile';
 
 interface ContactPageProps {
   onNavigate: (page: string) => void;
@@ -18,6 +19,15 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+
+  const handleTurnstileVerify = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -46,6 +56,13 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setErrorMessage('Please enter a valid email address.');
+      setSubmitStatus('error');
+      return;
+    }
+
+    // Turnstile verification
+    if (!turnstileToken) {
+      setErrorMessage('Please complete the security check.');
       setSubmitStatus('error');
       return;
     }
@@ -232,9 +249,15 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                 />
               </div>
 
+              <CloudflareTurnstile
+                onVerify={handleTurnstileVerify}
+                onExpire={handleTurnstileExpire}
+                className="mb-2"
+              />
+
               <Button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !turnstileToken}
                 className="w-full text-white rounded-xl"
                 style={{ backgroundColor: '#2894ca' }}
               >

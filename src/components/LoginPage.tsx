@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
+import { CloudflareTurnstile } from './CloudflareTurnstile';
 
 interface LoginPageProps {
   onAuth: (args: { mode: 'signIn' | 'signUp'; email: string; password: string; fullName?: string }) => Promise<void> | void;
@@ -20,6 +21,15 @@ export function LoginPage({ onAuth, onNavigate, isLoading, error }: LoginPagePro
   const [honeypot, setHoneypot] = useState(''); // Bot protection honeypot field
   const [formStartTime] = useState(Date.now()); // Track form load time for timing check
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+
+  const handleTurnstileVerify = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,6 +56,12 @@ export function LoginPage({ onAuth, onNavigate, isLoading, error }: LoginPagePro
 
     if (isSignUp && !name) {
       setAuthError('Please enter your full name.');
+      return;
+    }
+
+    // Turnstile verification
+    if (!turnstileToken) {
+      setAuthError('Please complete the security check.');
       return;
     }
 
@@ -161,9 +177,15 @@ export function LoginPage({ onAuth, onNavigate, isLoading, error }: LoginPagePro
               </div>
             )}
 
+            <CloudflareTurnstile
+              onVerify={handleTurnstileVerify}
+              onExpire={handleTurnstileExpire}
+              className="mb-2"
+            />
+
             <Button 
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !turnstileToken}
               className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl h-12 text-base"
             >
               {isLoading ? 'Please wait…' : isSignUp ? 'Create Account' : 'Sign In'}

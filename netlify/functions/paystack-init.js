@@ -1,4 +1,5 @@
 const PAYSTACK_BASE_URL = 'https://api.paystack.co';
+const { verifyToken } = require('./verify-turnstile');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
@@ -17,9 +18,24 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ message: 'Invalid JSON body' }) };
   }
 
-  const { email, amount, metadata } = payload;
+  const { email, amount, metadata, turnstileToken } = payload;
   if (!email || !amount) {
     return { statusCode: 400, body: JSON.stringify({ message: 'email and amount are required' }) };
+  }
+
+  // Verify Turnstile token if present and secret key is configured
+  if (process.env.TURNSTILE_SECRET_KEY) {
+    if (!turnstileToken) {
+      return { statusCode: 403, body: JSON.stringify({ message: 'Security verification required' }) };
+    }
+    try {
+      const verified = await verifyToken(turnstileToken);
+      if (!verified) {
+        return { statusCode: 403, body: JSON.stringify({ message: 'Security verification failed' }) };
+      }
+    } catch (err) {
+      return { statusCode: 500, body: JSON.stringify({ message: 'Verification service error' }) };
+    }
   }
 
   const siteUrl = process.env.URL || process.env.DEPLOY_PRIME_URL || 'http://localhost:3000';
