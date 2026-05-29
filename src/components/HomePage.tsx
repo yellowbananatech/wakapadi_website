@@ -12,8 +12,6 @@ interface HomePageProps {
 const FEATURED_PACKAGES_COUNT = 6;
 
 export function HomePage({ onNavigate }: HomePageProps) {
-  const [payLoading, setPayLoading] = useState(false);
-  const [payError, setPayError] = useState<string | null>(null);
   const [currency, setCurrency] = useState<CurrencyInfo | null>(null);
 
   useEffect(() => {
@@ -27,30 +25,6 @@ export function HomePage({ onNavigate }: HomePageProps) {
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true },
     transition: { duration: 0.6 }
-  };
-
-  const handlePaystackTest = async () => {
-    setPayError(null);
-    setPayLoading(true);
-    try {
-      const res = await fetch('/.netlify/functions/paystack-init', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: 'test@mywakapadi.com',
-          amount: 20000,
-          metadata: { source: 'paystack-test', page: 'home' },
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok || !data?.status) {
-        throw new Error(data?.message ?? 'Failed to start payment');
-      }
-      window.location.href = data.data.authorization_url;
-    } catch (err: any) {
-      setPayError(err?.message ?? 'Payment init failed');
-      setPayLoading(false);
-    }
   };
 
   const services = [
@@ -120,7 +94,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
               Expert visa strategy, migration pathways, and citizenship solutions for professionals and high-net-worth individuals.
             </p>
             
-            <div className="flex flex-col sm:flex-row items-start gap-4 mb-10">
+            <div className="flex flex-col sm:flex-row items-start gap-4 mb-16">
               <Button 
                 size="lg"
                 onClick={() => window.open('https://selar.com/wakapadixveev', '_blank')}
@@ -131,20 +105,6 @@ export function HomePage({ onNavigate }: HomePageProps) {
               >
                 Start Your Journey
               </Button>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-start gap-3 mb-16">
-              <Button
-                size="lg"
-                onClick={handlePaystackTest}
-                disabled={payLoading}
-                className="bg-accent hover:bg-accent/90 text-white rounded-xl px-6 h-12 text-base"
-              >
-                {payLoading ? 'Redirecting…' : 'Pay with Paystack (Test)'}
-              </Button>
-              {payError && (
-                <p className="text-sm text-red-600 mt-2 sm:mt-3">{payError}</p>
-              )}
             </div>
 
             {/* Trust Indicators */}
