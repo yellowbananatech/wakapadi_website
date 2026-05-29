@@ -54,8 +54,14 @@ Optional Paystack URL overrides:
    ```
 4. Deploy functions:
    ```bash
+   supabase functions deploy
+   ```
+   Or deploy a single function:
+   ```bash
    supabase functions deploy api
    ```
+
+   Functions are declared in `supabase/config.toml`. The `api` function uses `index.tsx` as its entrypoint (configured there).
 
 ## Notes
 
