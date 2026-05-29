@@ -3,7 +3,7 @@
   publish = "build"
 
 [functions]
-  directory = "supabase/functions"
+  directory = "netlify/functions"
 
 [[redirects]]
   from = "/*"

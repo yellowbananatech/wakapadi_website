@@ -1,18 +1,21 @@
 # Supabase Backend Setup
 
-This directory holds backend resources for the site:
+This directory holds Supabase-specific backend resources:
 
-- `supabase/db/migrations/` — database schema migrations for Supabase
-- `supabase/functions/` — backend functions used by the app
+- `supabase/migrations/` — database schema migrations for Supabase
+- `supabase/functions/api/` — Supabase Edge Functions (Deno), deployed via Supabase CLI
 
 ## Current structure
 
-- `supabase/db/migrations/0001_init.sql`
-- `supabase/functions/paystack-init.js`
-- `supabase/functions/paystack-webhook.js`
-- `supabase/functions/verify-turnstile.js`
-- `supabase/functions/api/index.tsx`
-- `supabase/functions/api/kv_store.tsx`
+- `supabase/migrations/0001_init.sql`
+- `supabase/functions/api/index.tsx` — Supabase Edge Function (Hono API)
+- `supabase/functions/api/kv_store.tsx` — KV store helper for the Edge Function
+
+**Netlify Functions** (Paystack, Turnstile) live in `netlify/functions/` and are deployed by Netlify, not Supabase:
+
+- `netlify/functions/paystack-init.js`
+- `netlify/functions/paystack-webhook.js`
+- `netlify/functions/verify-turnstile.js`
 
 ## Environment variables
 
@@ -56,5 +59,6 @@ Optional Paystack URL overrides:
 
 ## Notes
 
-- `netlify.toml` is configured to use `supabase/functions` as the functions directory.
-- The `api` directory is a Supabase-compatible function entrypoint for site backend logic.
+- `netlify.toml` uses `netlify/functions` for Netlify serverless functions (Paystack, Turnstile).
+- `supabase/functions/api/` is deployed separately with `supabase functions deploy api`.
+- Do not point Netlify at `supabase/functions/` — Edge Function code uses Deno imports (`npm:`, `jsr:`) that Netlify cannot bundle.
