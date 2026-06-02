@@ -34,7 +34,7 @@ export const PACKAGES_LIST: Package[] = [
       'Spa and wellness treatments',
       'Local market shopping tour'
     ],
-    image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800',
+    image: '/packages/mombasa-7.png',
     description: 'Experience the pristine beaches and rich culture of Mombasa with luxury accommodations and exciting activities.',
     highlights: ['Beachfront luxury resort', 'Water sports included', 'Cultural immersion']
   },
@@ -60,7 +60,7 @@ export const PACKAGES_LIST: Package[] = [
       'Traditional dance performances',
       'Coffee plantation tour'
     ],
-    image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800',
+    image: '/packages/rwanda-7.png',
     description: 'Discover the land of a thousand hills with unforgettable wildlife encounters and cultural experiences.',
     highlights: ['Gorilla trekking included', 'Luxury accommodations', 'Private guide']
   },
@@ -87,7 +87,7 @@ export const PACKAGES_LIST: Package[] = [
       'Traditional water puppet show',
       'Bike tour through rice paddies'
     ],
-    image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800',
+    image: '/packages/vietnam-honeymoon.png',
     description: 'A romantic honeymoon experience through Vietnam\'s most stunning landscapes and cultural treasures.',
     highlights: ['Honeymoon package', 'Luxury cruise', 'Romantic activities']
   },
@@ -113,7 +113,7 @@ export const PACKAGES_LIST: Package[] = [
       'Katara Cultural Village tour',
       'Luxury spa experience'
     ],
-    image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800',
+    image: '/packages/doha-5.png',
     description: 'Experience the perfect blend of modern luxury and traditional Qatari culture in Doha.',
     highlights: ['Desert safari included', 'Cultural immersion', 'Luxury shopping']
   },
@@ -140,7 +140,7 @@ export const PACKAGES_LIST: Package[] = [
       'Neighborhood food tours',
       'Sunset rooftop dining'
     ],
-    image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800',
+    image: '/packages/johannesburg-7.png',
     description: 'Explore the vibrant city of Johannesburg with its rich history, culture, and exciting adventures.',
     highlights: ['Safari included', 'Historical tours', 'City exploration']
   },
@@ -167,7 +167,7 @@ export const PACKAGES_LIST: Package[] = [
       'Dolphin watching',
       'Sunset photography sessions'
     ],
-    image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800',
+    image: '/packages/mauritius-honeymoon.png',
     description: 'A romantic paradise escape with pristine beaches, crystal-clear waters, and unforgettable moments.',
     highlights: ['All-inclusive', 'Honeymoon package', 'Private villa']
   },
@@ -194,7 +194,7 @@ export const PACKAGES_LIST: Package[] = [
       'Helicopter flight over falls',
       'Traditional village visit'
     ],
-    image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800',
+    image: '/packages/zambia-7.png',
     description: 'Adventure and natural wonder await at one of the world\'s most spectacular waterfalls.',
     highlights: ['Adventure activities', 'Victoria Falls access', 'Luxury lodge']
   },
@@ -221,7 +221,7 @@ export const PACKAGES_LIST: Package[] = [
       'Traditional drumming lessons',
       'Local cuisine cooking class'
     ],
-    image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800',
+    image: '/packages/accra-7.png',
     description: 'Immerse yourself in Ghana\'s rich history, vibrant culture, and warm hospitality.',
     highlights: ['Cultural immersion', 'Historical sites', 'Beach access']
   },
@@ -250,7 +250,7 @@ export const PACKAGES_LIST: Package[] = [
       'Traditional festivals',
       'Nigerian cuisine experiences'
     ],
-    image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800',
+    image: '/packages/explore-naija-13.png',
     description: 'A comprehensive journey through Nigeria\'s most vibrant cities, cultures, and natural wonders.',
     highlights: ['Multi-city tour', 'All-inclusive', 'Cultural experiences']
   }
