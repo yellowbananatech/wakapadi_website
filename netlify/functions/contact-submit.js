@@ -48,7 +48,7 @@ exports.handler = async (event) => {
   if (!apiKey) {
     return jsonResponse(500, {
       success: false,
-      message: 'Email service is not configured. Please contact hello@mywakapadi.com directly.',
+      message: 'Email service is not configured. Please contact us on WhatsApp.',
     });
   }
 
@@ -137,7 +137,7 @@ exports.handler = async (event) => {
     console.error('Resend API error', res.status, data);
     return jsonResponse(500, {
       success: false,
-      message: 'Failed to send your message. Please email hello@mywakapadi.com directly.',
+      message: 'Failed to send your message. Please contact us on WhatsApp.',
     });
   }
 

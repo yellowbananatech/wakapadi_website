@@ -77,13 +77,18 @@ export function Footer({ onNavigate }: FooterProps) {
             <h4 className={headingClass}>Support</h4>
             <ul className="space-y-0">
               <li>
-                <a href="mailto:hello@mywakapadi.com" className={linkClass}>
-                  hello@mywakapadi.com
-                </a>
+                <button onClick={() => onNavigate('contact')} className={linkClass}>
+                  Contact Form
+                </button>
               </li>
               <li>
-                <a href="https://wa.me/447781183175" className={linkClass}>
-                  +44 7781 183175
+                <a
+                  href="https://wa.me/447781183175"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={linkClass}
+                >
+                  Chat on WhatsApp
                 </a>
               </li>
               <li>

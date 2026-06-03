@@ -99,7 +99,7 @@ We may update this Privacy & Cookie Policy from time to time. We will notify you
 ## 11. Contact Us
 
 If you have questions about this Privacy & Cookie Policy, please contact us at:
-- Email: hello@mywakapadi.com
+- Contact form: Visit the Contact Us page
 - Address: Defoe Rd, Ipswich, IP1 6SN, UK`
   },
   'acceptable-use': {
@@ -152,7 +152,7 @@ We reserve the right to:
 
 ## 7. Reporting Violations
 
-If you become aware of any violation of this Policy, please report it to us at hello@mywakapadi.com.
+If you become aware of any violation of this Policy, please report it through the Contact Us page.
 
 ## 8. Consequences of Violations
 
@@ -167,7 +167,7 @@ We may update this Policy from time to time. Continued use of our services after
 
 ## 10. Contact Us
 
-For questions about this Policy, contact us at hello@mywakapadi.com.`
+For questions about this Policy, contact us through the Contact Us page.`
   },
   refund: {
     id: 'refund',
@@ -211,7 +211,7 @@ We may consider refunds in special circumstances such as:
 
 ## 7. Dispute Resolution
 
-If you are not satisfied with a service, please contact us at hello@mywakapadi.com. We will work with you to resolve any issues.
+If you are not satisfied with a service, please contact us through the Contact Us page. We will work with you to resolve any issues.
 
 ## 8. Non-Refundable Items
 
@@ -224,8 +224,8 @@ The following are generally non-refundable:
 ## 9. Contact Us
 
 For refund requests or questions about this policy, contact us at:
-- Email: hello@mywakapadi.com
-- Phone: +44 7781 183175`
+- Contact form: Visit the Contact Us page
+- WhatsApp: Use the WhatsApp button on the Contact Us page`
   },
   terms: {
     id: 'terms',
@@ -298,7 +298,7 @@ We may modify these Terms at any time. Continued use of our services after chang
 
 ## 13. Contact Us
 
-For questions about these Terms, contact us at hello@mywakapadi.com.`
+For questions about these Terms, contact us through the Contact Us page.`
   },
   'user-services': {
     id: 'user-services',
@@ -389,8 +389,8 @@ This Agreement, together with our Terms of Use and Privacy Policy, constitutes t
 
 Wakapadi Lifestyle Limited
 Defoe Rd, Ipswich, IP1 6SN, UK
-Email: hello@mywakapadi.com
-Phone: +44 7781 183175`
+Contact: Use the Contact Us page
+WhatsApp: Use the WhatsApp button on the Contact Us page`
   },
   'data-processing': {
     id: 'data-processing',
@@ -490,7 +490,7 @@ We retain Personal Data only for as long as necessary:
 ## 12. Contact and Complaints
 
 For data protection inquiries or complaints:
-- Email: hello@mywakapadi.com
+- Contact form: Visit the Contact Us page
 - You also have the right to lodge a complaint with your local data protection authority
 
 ## 13. Updates

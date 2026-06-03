@@ -17,6 +17,8 @@ export function ContactPage(_props: ContactPageProps) {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
+  const whatsappUrl = 'https://wa.me/447781183175';
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -26,8 +28,8 @@ export function ContactPage(_props: ContactPageProps) {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submitMessage = async () => {
+    if (isSubmitting) return;
 
     if (formData.honeypot) {
       return;
@@ -84,11 +86,16 @@ export function ContactPage(_props: ContactPageProps) {
       const msg = error instanceof Error ? error.message : '';
       setErrorMessage(
         msg ||
-          'Failed to submit your message. Please try again or contact us directly at hello@mywakapadi.com'
+          'Failed to submit your message. Please try again or contact us on WhatsApp.'
       );
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    void submitMessage();
   };
 
   return (
@@ -107,17 +114,23 @@ export function ContactPage(_props: ContactPageProps) {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
             <div className="glass rounded-2xl p-6 text-center">
-              <div className="text-3xl mb-4">📧</div>
-              <h3 className="font-semibold text-slate-900 mb-2">Email</h3>
-              <a href="mailto:hello@mywakapadi.com" className="text-primary hover:text-primary/80">
-                hello@mywakapadi.com
-              </a>
+              <div className="text-3xl mb-4">Message</div>
+              <h3 className="font-semibold text-slate-900 mb-2">Secure Form</h3>
+              <p className="text-slate-600 text-sm">
+                Send us a message using the form below.
+              </p>
             </div>
             <div className="glass rounded-2xl p-6 text-center">
-              <div className="text-3xl mb-4">📱</div>
-              <h3 className="font-semibold text-slate-900 mb-2">Phone</h3>
-              <a href="https://wa.me/447781183175" className="text-primary hover:text-primary/80">
-                +44 7781 183175
+              <div className="text-3xl mb-4">WhatsApp</div>
+              <h3 className="font-semibold text-slate-900 mb-2">Chat With Us</h3>
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
+                style={{ backgroundColor: '#2894ca' }}
+              >
+                Open WhatsApp
               </a>
             </div>
             <div className="glass rounded-2xl p-6 text-center">
@@ -242,17 +255,27 @@ export function ContactPage(_props: ContactPageProps) {
 
               <div className="relative z-20 pt-4 pb-2">
                 <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full h-14 text-base font-medium text-white rounded-xl transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#2894ca] disabled:opacity-60 disabled:cursor-wait cursor-pointer"
-                  style={{ backgroundColor: '#2894ca', pointerEvents: 'auto' }}
+                  type="button"
+                  aria-disabled={isSubmitting}
+                  onPointerDown={(e) => {
+                    e.preventDefault();
+                    void submitMessage();
+                  }}
+                  onClick={() => void submitMessage()}
+                  className="block w-full h-14 text-base font-medium text-white rounded-xl transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#2894ca] cursor-pointer select-none"
+                  style={{ backgroundColor: '#2894ca', pointerEvents: 'auto', touchAction: 'manipulation' }}
                 >
                   {isSubmitting ? 'Sending...' : 'Send Message'}
                 </button>
                 <p className="mt-3 text-center text-sm text-slate-500">
-                  Or email us directly at{' '}
-                  <a href="mailto:hello@mywakapadi.com" className="text-primary hover:underline">
-                    hello@mywakapadi.com
+                  Prefer chat?{' '}
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    Open WhatsApp
                   </a>
                 </p>
               </div>
