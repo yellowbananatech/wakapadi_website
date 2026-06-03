@@ -20,6 +20,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileKey, setTurnstileKey] = useState(0);
 
   const handleTurnstileVerify = useCallback((token: string) => {
     setTurnstileToken(token);
@@ -72,18 +73,29 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
     setErrorMessage('');
 
     try {
-      // In a real implementation, you would send this to your backend/API
-      // For now, we'll simulate a submission
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Here you would typically:
-      // 1. Send to your backend API
-      // 2. Store in Supabase
-      // 3. Send email notification
-      
-      console.log('Form submitted:', formData);
-      
+      const res = await fetch('/.netlify/functions/contact-submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: formData.message,
+          honeypot: formData.honeypot,
+          turnstileToken,
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.message ?? 'Failed to send message');
+      }
+
       setSubmitStatus('success');
+      setTurnstileToken(null);
+      setTurnstileKey((k) => k + 1);
       setFormData({
         name: '',
         email: '',
@@ -94,7 +106,10 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
       });
     } catch (error) {
       setSubmitStatus('error');
-      setErrorMessage('Failed to submit your message. Please try again or contact us directly at hello@mywakapadi.com');
+      const msg = error instanceof Error ? error.message : '';
+      setErrorMessage(
+        msg || 'Failed to submit your message. Please try again or contact us directly at hello@mywakapadi.com'
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -250,6 +265,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
               </div>
 
               <CloudflareTurnstile
+                key={turnstileKey}
                 onVerify={handleTurnstileVerify}
                 onExpire={handleTurnstileExpire}
                 className="mb-2"
