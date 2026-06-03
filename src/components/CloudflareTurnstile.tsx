@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 
 declare global {
   interface Window {
@@ -44,45 +44,62 @@ export function CloudflareTurnstile({
 }: CloudflareTurnstileProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
+  const onVerifyRef = useRef(onVerify);
+  const onExpireRef = useRef(onExpire);
+  const onErrorRef = useRef(onError);
 
-  const renderWidget = useCallback(() => {
-    if (!containerRef.current || !window.turnstile || widgetIdRef.current) return;
-
-    widgetIdRef.current = window.turnstile.render(containerRef.current, {
-      sitekey: SITE_KEY,
-      callback: onVerify,
-      'expired-callback': onExpire,
-      'error-callback': onError,
-      theme,
-      size,
-    });
-  }, [onVerify, onExpire, onError, theme, size]);
+  onVerifyRef.current = onVerify;
+  onExpireRef.current = onExpire;
+  onErrorRef.current = onError;
 
   useEffect(() => {
-    // If the turnstile script is already loaded, render immediately
+    const mountWidget = () => {
+      if (!containerRef.current || !window.turnstile || widgetIdRef.current) return;
+
+      widgetIdRef.current = window.turnstile.render(containerRef.current, {
+        sitekey: SITE_KEY,
+        callback: (token: string) => onVerifyRef.current(token),
+        'expired-callback': () => onExpireRef.current?.(),
+        'error-callback': () => onErrorRef.current?.(),
+        theme,
+        size,
+      });
+    };
+
     if (window.turnstile) {
-      renderWidget();
-      return;
+      mountWidget();
+    } else {
+      const interval = setInterval(() => {
+        if (window.turnstile) {
+          clearInterval(interval);
+          mountWidget();
+        }
+      }, 200);
+
+      return () => {
+        clearInterval(interval);
+        if (widgetIdRef.current && window.turnstile) {
+          window.turnstile.remove(widgetIdRef.current);
+          widgetIdRef.current = null;
+        }
+      };
     }
 
-    // Otherwise wait for the script to load (added in index.html)
-    const interval = setInterval(() => {
-      if (window.turnstile) {
-        clearInterval(interval);
-        renderWidget();
-      }
-    }, 200);
-
     return () => {
-      clearInterval(interval);
       if (widgetIdRef.current && window.turnstile) {
         window.turnstile.remove(widgetIdRef.current);
         widgetIdRef.current = null;
       }
     };
-  }, [renderWidget]);
+  }, [theme, size]);
 
   if (!SITE_KEY) return null;
 
-  return <div ref={containerRef} className={className} />;
+  return (
+    <div
+      ref={containerRef}
+      className={className}
+      style={{ isolation: 'isolate', contain: 'layout' }}
+    />
+  );
 }

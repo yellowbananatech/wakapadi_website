@@ -1,10 +1,18 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { CloudflareTurnstile, isTurnstileEnabled } from './CloudflareTurnstile';
 
 interface ContactPageProps {
   onNavigate: (page: string) => void;
+}
+
+function getTurnstileTokenFromDom(): string | null {
+  const input = document.querySelector<HTMLInputElement>(
+    'input[name="cf-turnstile-response"]'
+  );
+  const value = input?.value?.trim();
+  return value || null;
 }
 
 export function ContactPage({ onNavigate }: ContactPageProps) {
@@ -21,12 +29,15 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
   const [errorMessage, setErrorMessage] = useState('');
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [turnstileKey, setTurnstileKey] = useState(0);
+  const turnstileTokenRef = useRef<string | null>(null);
 
   const handleTurnstileVerify = useCallback((token: string) => {
+    turnstileTokenRef.current = token;
     setTurnstileToken(token);
   }, []);
 
   const handleTurnstileExpire = useCallback(() => {
+    turnstileTokenRef.current = null;
     setTurnstileToken(null);
   }, []);
 
@@ -61,7 +72,9 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
       return;
     }
 
-    if (isTurnstileEnabled && !turnstileToken) {
+    const activeTurnstileToken =
+      turnstileTokenRef.current ?? turnstileToken ?? getTurnstileTokenFromDom();
+    if (isTurnstileEnabled && !activeTurnstileToken) {
       setErrorMessage('Please complete the security check below the message field.');
       setSubmitStatus('error');
       return;
@@ -82,7 +95,8 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
           subject: formData.subject,
           message: formData.message,
           honeypot: formData.honeypot,
-          turnstileToken,
+          turnstileToken:
+            turnstileTokenRef.current ?? turnstileToken ?? getTurnstileTokenFromDom(),
         }),
       });
 
@@ -93,6 +107,7 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
       }
 
       setSubmitStatus('success');
+      turnstileTokenRef.current = null;
       setTurnstileToken(null);
       setTurnstileKey((k) => k + 1);
       setFormData({
@@ -264,27 +279,31 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
               </div>
 
               {isTurnstileEnabled && (
-                <>
+                <div className="relative z-0 mb-6">
                   <p className="text-sm text-slate-600 mb-2">
-                    Complete the security check to enable Send Message.
+                    {turnstileToken
+                      ? 'Security check complete. You can send your message.'
+                      : 'Complete the security check before sending.'}
                   </p>
                   <CloudflareTurnstile
                     key={turnstileKey}
                     onVerify={handleTurnstileVerify}
                     onExpire={handleTurnstileExpire}
-                    className="mb-2"
                   />
-                </>
+                </div>
               )}
 
-              <Button
-                type="submit"
-                disabled={isSubmitting || (isTurnstileEnabled && !turnstileToken)}
-                className="w-full text-white rounded-xl"
-                style={{ backgroundColor: '#2894ca' }}
-              >
-                {isSubmitting ? 'Sending...' : 'Send Message'}
-              </Button>
+              <div className="relative z-10 pt-2">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  size="lg"
+                  className="w-full h-14 text-base text-white rounded-xl cursor-pointer hover:opacity-90 disabled:opacity-60"
+                  style={{ backgroundColor: '#2894ca' }}
+                >
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
+                </Button>
+              </div>
             </form>
           </div>
         </motion.div>
