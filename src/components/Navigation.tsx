@@ -351,13 +351,16 @@ export function Navigation({ onNavigate, currentPage, isLoggedIn, isAdmin, onLog
         </div>
       )}
 
-      {/* Mobile WhatsApp Button */}
-      <a
-        href="https://wa.me/447781183175"
-        className="lg:hidden fixed bottom-6 right-6 bg-accent hover:bg-accent/90 text-black rounded-full p-4 shadow-lg z-50 transition-transform hover:scale-105"
-      >
-        <Phone size={24} />
-      </a>
+      {/* Mobile WhatsApp Button — hidden on contact so it does not cover Send Message */}
+      {currentPage !== 'contact' && (
+        <a
+          href="https://wa.me/447781183175"
+          className="lg:hidden fixed bottom-6 right-6 bg-accent hover:bg-accent/90 text-black rounded-full p-4 shadow-lg z-50 transition-transform hover:scale-105"
+          aria-label="Chat on WhatsApp"
+        >
+          <Phone size={24} />
+        </a>
+      )}
     </>
   );
 }

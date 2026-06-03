@@ -74,10 +74,8 @@ exports.handler = async (event) => {
     return jsonResponse(400, { success: false, message: 'Please enter a valid email address.' });
   }
 
-  if (process.env.TURNSTILE_SECRET_KEY) {
-    if (!turnstileToken) {
-      return jsonResponse(403, { success: false, message: 'Security verification required.' });
-    }
+  // Contact form: verify Turnstile only when a token is sent (widget removed from UI — iframe blocked clicks)
+  if (process.env.TURNSTILE_SECRET_KEY && turnstileToken) {
     try {
       const verified = await verifyToken(turnstileToken);
       if (!verified) {

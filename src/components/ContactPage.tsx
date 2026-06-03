@@ -1,81 +1,47 @@
-import { useState, useCallback, useRef } from 'react';
-import { motion } from 'motion/react';
-import { Button } from './ui/button';
-import { CloudflareTurnstile, isTurnstileEnabled } from './CloudflareTurnstile';
+import { useState } from 'react';
 
 interface ContactPageProps {
   onNavigate: (page: string) => void;
 }
 
-function getTurnstileTokenFromDom(): string | null {
-  const input = document.querySelector<HTMLInputElement>(
-    'input[name="cf-turnstile-response"]'
-  );
-  const value = input?.value?.trim();
-  return value || null;
-}
-
-export function ContactPage({ onNavigate }: ContactPageProps) {
+export function ContactPage(_props: ContactPageProps) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     subject: '',
     message: '',
-    honeypot: '' // Bot protection field
+    honeypot: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const [turnstileKey, setTurnstileKey] = useState(0);
-  const turnstileTokenRef = useRef<string | null>(null);
 
-  const handleTurnstileVerify = useCallback((token: string) => {
-    turnstileTokenRef.current = token;
-    setTurnstileToken(token);
-  }, []);
-
-  const handleTurnstileExpire = useCallback(() => {
-    turnstileTokenRef.current = null;
-    setTurnstileToken(null);
-  }, []);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Bot protection: if honeypot field is filled, it's likely a bot
+
     if (formData.honeypot) {
-      console.log('Bot detected');
       return;
     }
 
-    // Basic validation
-    if (!formData.name || !formData.email || !formData.message) {
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
       setErrorMessage('Please fill in all required fields.');
       setSubmitStatus('error');
       return;
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
+    if (!emailRegex.test(formData.email.trim())) {
       setErrorMessage('Please enter a valid email address.');
-      setSubmitStatus('error');
-      return;
-    }
-
-    const activeTurnstileToken =
-      turnstileTokenRef.current ?? turnstileToken ?? getTurnstileTokenFromDom();
-    if (isTurnstileEnabled && !activeTurnstileToken) {
-      setErrorMessage('Please complete the security check below the message field.');
       setSubmitStatus('error');
       return;
     }
@@ -95,8 +61,6 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
           subject: formData.subject,
           message: formData.message,
           honeypot: formData.honeypot,
-          turnstileToken:
-            turnstileTokenRef.current ?? turnstileToken ?? getTurnstileTokenFromDom(),
         }),
       });
 
@@ -107,22 +71,20 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
       }
 
       setSubmitStatus('success');
-      turnstileTokenRef.current = null;
-      setTurnstileToken(null);
-      setTurnstileKey((k) => k + 1);
       setFormData({
         name: '',
         email: '',
         phone: '',
         subject: '',
         message: '',
-        honeypot: ''
+        honeypot: '',
       });
     } catch (error) {
       setSubmitStatus('error');
       const msg = error instanceof Error ? error.message : '';
       setErrorMessage(
-        msg || 'Failed to submit your message. Please try again or contact us directly at hello@mywakapadi.com'
+        msg ||
+          'Failed to submit your message. Please try again or contact us directly at hello@mywakapadi.com'
       );
     } finally {
       setIsSubmitting(false);
@@ -130,19 +92,16 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
   };
 
   return (
-    <div className="min-h-screen pt-32 bg-white pb-20">
+    <div className="min-h-screen pt-32 bg-white pb-32">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
+        <div>
           <div className="text-center mb-12">
             <h1 className="text-5xl md:text-6xl font-semibold text-slate-900 mb-6 tracking-tighter">
               Contact Us
             </h1>
             <p className="text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
-              Have a question or need assistance? We're here to help. Fill out the form below and we'll get back to you as soon as possible.
+              Have a question or need assistance? We&apos;re here to help. Fill out the form below and
+              we&apos;ll get back to you as soon as possible.
             </p>
           </div>
 
@@ -165,15 +124,17 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
               <div className="text-3xl mb-4">📍</div>
               <h3 className="font-semibold text-slate-900 mb-2">Address</h3>
               <p className="text-slate-600 text-sm">
-                Defoe Rd, Ipswich<br />IP1 6SN, UK
+                Defoe Rd, Ipswich
+                <br />
+                IP1 6SN, UK
               </p>
             </div>
           </div>
 
-          <div className="glass rounded-2xl p-8 md:p-12">
+          <div className="glass rounded-2xl p-8 md:p-12 relative">
             {submitStatus === 'success' && (
               <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-700">
-                Thank you for your message! We'll get back to you soon.
+                Thank you for your message! We&apos;ll get back to you soon.
               </div>
             )}
 
@@ -183,16 +144,17 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Honeypot field - hidden from users */}
+            <form id="contact-form" onSubmit={handleSubmit} className="space-y-6 relative z-10">
               <input
                 type="text"
                 name="honeypot"
                 value={formData.honeypot}
                 onChange={handleChange}
-                style={{ position: 'absolute', left: '-9999px', opacity: 0, pointerEvents: 'none' }}
                 tabIndex={-1}
                 autoComplete="off"
+                aria-hidden="true"
+                className="absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0"
+                style={{ clip: 'rect(0,0,0,0)' }}
               />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -278,35 +240,25 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                 />
               </div>
 
-              {isTurnstileEnabled && (
-                <div className="relative z-0 mb-6">
-                  <p className="text-sm text-slate-600 mb-2">
-                    {turnstileToken
-                      ? 'Security check complete. You can send your message.'
-                      : 'Complete the security check before sending.'}
-                  </p>
-                  <CloudflareTurnstile
-                    key={turnstileKey}
-                    onVerify={handleTurnstileVerify}
-                    onExpire={handleTurnstileExpire}
-                  />
-                </div>
-              )}
-
-              <div className="relative z-10 pt-2">
-                <Button
+              <div className="relative z-20 pt-4 pb-2">
+                <button
                   type="submit"
                   disabled={isSubmitting}
-                  size="lg"
-                  className="w-full h-14 text-base text-white rounded-xl cursor-pointer hover:opacity-90 disabled:opacity-60"
-                  style={{ backgroundColor: '#2894ca' }}
+                  className="w-full h-14 text-base font-medium text-white rounded-xl transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#2894ca] disabled:opacity-60 disabled:cursor-wait cursor-pointer"
+                  style={{ backgroundColor: '#2894ca', pointerEvents: 'auto' }}
                 >
                   {isSubmitting ? 'Sending...' : 'Send Message'}
-                </Button>
+                </button>
+                <p className="mt-3 text-center text-sm text-slate-500">
+                  Or email us directly at{' '}
+                  <a href="mailto:hello@mywakapadi.com" className="text-primary hover:underline">
+                    hello@mywakapadi.com
+                  </a>
+                </p>
               </div>
             </form>
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );
