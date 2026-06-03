@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
-import { CloudflareTurnstile } from './CloudflareTurnstile';
+import { CloudflareTurnstile, isTurnstileEnabled } from './CloudflareTurnstile';
 
 interface ContactPageProps {
   onNavigate: (page: string) => void;
@@ -61,9 +61,8 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
       return;
     }
 
-    // Turnstile verification
-    if (!turnstileToken) {
-      setErrorMessage('Please complete the security check.');
+    if (isTurnstileEnabled && !turnstileToken) {
+      setErrorMessage('Please complete the security check below the message field.');
       setSubmitStatus('error');
       return;
     }
@@ -264,16 +263,23 @@ export function ContactPage({ onNavigate }: ContactPageProps) {
                 />
               </div>
 
-              <CloudflareTurnstile
-                key={turnstileKey}
-                onVerify={handleTurnstileVerify}
-                onExpire={handleTurnstileExpire}
-                className="mb-2"
-              />
+              {isTurnstileEnabled && (
+                <>
+                  <p className="text-sm text-slate-600 mb-2">
+                    Complete the security check to enable Send Message.
+                  </p>
+                  <CloudflareTurnstile
+                    key={turnstileKey}
+                    onVerify={handleTurnstileVerify}
+                    onExpire={handleTurnstileExpire}
+                    className="mb-2"
+                  />
+                </>
+              )}
 
               <Button
                 type="submit"
-                disabled={isSubmitting || !turnstileToken}
+                disabled={isSubmitting || (isTurnstileEnabled && !turnstileToken)}
                 className="w-full text-white rounded-xl"
                 style={{ backgroundColor: '#2894ca' }}
               >

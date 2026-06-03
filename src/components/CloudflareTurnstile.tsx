@@ -29,7 +29,10 @@ interface CloudflareTurnstileProps {
   className?: string;
 }
 
-const SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? '';
+const SITE_KEY = (import.meta.env.VITE_TURNSTILE_SITE_KEY ?? '').trim();
+
+/** True when the Turnstile widget can be shown (requires VITE_TURNSTILE_SITE_KEY at build time). */
+export const isTurnstileEnabled = SITE_KEY.length > 0;
 
 export function CloudflareTurnstile({
   onVerify,
