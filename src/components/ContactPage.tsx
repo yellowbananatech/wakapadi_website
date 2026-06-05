@@ -1,15 +1,6 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { Button } from './ui/button';
 import { CloudflareTurnstile, isTurnstileEnabled } from './CloudflareTurnstile';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from './ui/alert-dialog';
 
 interface ContactPageProps {
   onNavigate: (page: string) => void;
@@ -119,8 +110,8 @@ export function ContactPage(_props: ContactPageProps) {
         throw new Error(data?.message ?? 'Failed to send message');
       }
 
-      resetFormState();
       setSuccessDialogOpen(true);
+      resetFormState();
     } catch (error) {
       const msg = error instanceof Error ? error.message : '';
       setErrorMessage(
@@ -142,30 +133,57 @@ export function ContactPage(_props: ContactPageProps) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  useEffect(() => {
+    if (!successDialogOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [successDialogOpen]);
+
   return (
     <div className="min-h-screen pt-32 bg-white pb-32">
-      <AlertDialog open={successDialogOpen} onOpenChange={setSuccessDialogOpen}>
-        <AlertDialogContent className="rounded-2xl sm:max-w-md">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-slate-900 text-xl">
+      {successDialogOpen && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center px-4"
+          role="presentation"
+        >
+          <button
+            type="button"
+            aria-label="Close dialog"
+            className="absolute inset-0 bg-slate-900/50 backdrop-blur-[2px]"
+            onClick={handleSuccessAck}
+          />
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="contact-success-title"
+            aria-describedby="contact-success-description"
+            className="relative z-[101] w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-2xl"
+          >
+            <h2 id="contact-success-title" className="text-xl font-semibold text-slate-900 mb-4">
               Message sent
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-slate-600 text-base leading-relaxed">
+            </h2>
+            <p id="contact-success-description" className="text-slate-600 text-base leading-relaxed mb-8">
               Thank you for your message! We&apos;ll get back to you within 24 hours. For a prompt
               response, please chat us up on Whatsapp.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="sm:justify-center">
-            <AlertDialogAction
-              onClick={handleSuccessAck}
-              className="text-white rounded-xl px-8 min-w-[120px]"
-              style={{ backgroundColor: '#2894ca' }}
-            >
-              OK
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </p>
+            <div className="flex justify-center">
+              <Button
+                type="button"
+                onClick={handleSuccessAck}
+                className="text-white rounded-xl px-8 min-w-[120px]"
+                style={{ backgroundColor: '#2894ca' }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#2278a8')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#2894ca')}
+              >
+                OK
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div>
