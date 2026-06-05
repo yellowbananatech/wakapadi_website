@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Button } from './ui/button';
 
 interface ContactPageProps {
   onNavigate: (page: string) => void;
@@ -123,15 +124,15 @@ export function ContactPage(_props: ContactPageProps) {
             <div className="glass rounded-2xl p-6 text-center">
               <div className="text-3xl mb-4">WhatsApp</div>
               <h3 className="font-semibold text-slate-900 mb-2">Chat With Us</h3>
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
+              <Button
+                onClick={() => window.open(whatsappUrl, '_blank', 'noopener,noreferrer')}
+                className="text-white rounded-xl px-6"
                 style={{ backgroundColor: '#2894ca' }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#2278a8')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#2894ca')}
               >
                 Open WhatsApp
-              </a>
+              </Button>
             </div>
             <div className="glass rounded-2xl p-6 text-center">
               <div className="text-3xl mb-4">📍</div>
