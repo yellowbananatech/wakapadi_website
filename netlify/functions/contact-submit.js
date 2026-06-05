@@ -39,17 +39,155 @@ function parseRecipients(envValue, fallback) {
     .filter(Boolean);
 }
 
+function normalizeFromEmail(value, fallback) {
+  const raw = (value || fallback).trim();
+  if (!raw) return fallback;
+  if (raw.includes('<') && raw.includes('>')) return raw;
+  const emailOnly = raw.replace(/^[^<]*<([^>]+)>$/, '$1').trim();
+  const address = emailOnly.includes('@') ? emailOnly : raw;
+  return `Wakapadi Website <${address}>`;
+}
+
+async function sendViaResend(apiKey, payload) {
+  const res = await fetch(RESEND_API, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  let data = {};
+  try {
+    data = await res.json();
+  } catch {
+    data = {};
+  }
+
+  return { ok: res.ok, data, provider: 'resend' };
+}
+
+async function sendViaSendGrid(apiKey, { from, to, cc, replyTo, subject, html }) {
+  const personalizations = [{ to: to.map((address) => ({ email: address })) }];
+  if (cc.length) {
+    personalizations[0].cc = cc.map((address) => ({ email: address }));
+  }
+
+  const res = await fetch('https://api.sendgrid.com/v3/mail/send', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      personalizations,
+      from: { email: from.match(/<([^>]+)>/)?.[1] || from, name: 'Wakapadi Website' },
+      reply_to: replyTo ? { email: replyTo } : undefined,
+      subject,
+      content: [{ type: 'text/html', value: html }],
+    }),
+  });
+
+  let data = {};
+  if (!res.ok) {
+    try {
+      data = await res.json();
+    } catch {
+      data = { message: await res.text() };
+    }
+  }
+
+  return { ok: res.ok, data, provider: 'sendgrid' };
+}
+
+async function sendViaMailgun({ from, to, cc, replyTo, subject, html }) {
+  const apiKey = process.env.NETLIFY_EMAILS_PROVIDER_API_KEY || process.env.MAILGUN_API_KEY;
+  const domain = process.env.NETLIFY_EMAILS_MAILGUN_DOMAIN || process.env.MAILGUN_DOMAIN;
+  if (!apiKey || !domain) return null;
+
+  const region = process.env.NETLIFY_EMAILS_MAILGUN_HOST_REGION === 'eu' ? 'api.eu' : 'api';
+  const body = new URLSearchParams();
+  body.set('from', from);
+  to.forEach((recipient) => body.append('to', recipient));
+  cc.forEach((recipient) => body.append('cc', recipient));
+  if (replyTo) body.set('h:Reply-To', replyTo);
+  body.set('subject', subject);
+  body.set('html', html);
+
+  const res = await fetch(`https://${region}.mailgun.net/v3/${domain}/messages`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${Buffer.from(`api:${apiKey}`).toString('base64')}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: body.toString(),
+  });
+
+  let data = {};
+  try {
+    data = await res.json();
+  } catch {
+    data = {};
+  }
+
+  return { ok: res.ok, data, provider: 'mailgun' };
+}
+
+async function deliverContactEmail(payload) {
+  const { from, to, cc, replyTo, subject, html } = payload;
+
+  if (process.env.RESEND_API_KEY) {
+    const result = await sendViaResend(process.env.RESEND_API_KEY, {
+      from,
+      to,
+      cc,
+      reply_to: replyTo,
+      subject,
+      html,
+    });
+    if (result.ok) return result;
+    console.error('Resend failed, trying fallback if configured', result.data);
+  }
+
+  const provider = (process.env.NETLIFY_EMAILS_PROVIDER || '').toLowerCase();
+  if (provider === 'sendgrid' && process.env.NETLIFY_EMAILS_PROVIDER_API_KEY) {
+    return sendViaSendGrid(process.env.NETLIFY_EMAILS_PROVIDER_API_KEY, {
+      from,
+      to,
+      cc,
+      replyTo,
+      subject,
+      html,
+    });
+  }
+
+  if (provider === 'mailgun') {
+    const result = await sendViaMailgun({ from, to, cc, replyTo, subject, html });
+    if (result) return result;
+  }
+
+  if (!process.env.RESEND_API_KEY) {
+    return {
+      ok: false,
+      data: {
+        message:
+          'Email service is not configured. Add RESEND_API_KEY or configure Netlify Email (SendGrid/Mailgun).',
+      },
+      provider: 'none',
+    };
+  }
+
+  return {
+    ok: false,
+    data: { message: 'Failed to send email via configured providers.' },
+    provider: 'resend',
+  };
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
-  }
-
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    return jsonResponse(500, {
-      success: false,
-      message: 'Email service is not configured. Please contact us on WhatsApp.',
-    });
   }
 
   let payload = {};
@@ -74,8 +212,10 @@ exports.handler = async (event) => {
     return jsonResponse(400, { success: false, message: 'Please enter a valid email address.' });
   }
 
-  // Contact form: verify Turnstile only when a token is sent (widget removed from UI — iframe blocked clicks)
-  if (process.env.TURNSTILE_SECRET_KEY && turnstileToken) {
+  if (process.env.TURNSTILE_SECRET_KEY) {
+    if (!turnstileToken) {
+      return jsonResponse(403, { success: false, message: 'Please complete the security check.' });
+    }
     try {
       const verified = await verifyToken(turnstileToken);
       if (!verified) {
@@ -88,8 +228,10 @@ exports.handler = async (event) => {
 
   const toRecipients = parseRecipients(process.env.CONTACT_TO_EMAIL, [DEFAULT_TO]);
   const ccRecipients = parseRecipients(process.env.CONTACT_CC_EMAILS, DEFAULT_CC);
-  const fromEmail =
-    process.env.CONTACT_FROM_EMAIL || 'Wakapadi Website <contact@mywakapadi.com>';
+  const fromEmail = normalizeFromEmail(
+    process.env.CONTACT_FROM_EMAIL,
+    'Wakapadi Website <contact@mywakapadi.com>'
+  );
 
   const subjectKey = (subject || '').trim();
   const subjectLabel = SUBJECT_LABELS[subjectKey] || (subjectKey || 'General Inquiry');
@@ -110,36 +252,22 @@ exports.handler = async (event) => {
     <p style="color:#64748b;font-size:12px;">Sent from mywakapadi.com contact form</p>
   `.trim();
 
-  const res = await fetch(RESEND_API, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from: fromEmail,
-      to: toRecipients,
-      cc: ccRecipients,
-      reply_to: email.trim(),
-      subject: `Wakapadi Contact: ${subjectLabel}`,
-      html,
-    }),
+  const delivery = await deliverContactEmail({
+    from: fromEmail,
+    to: toRecipients,
+    cc: ccRecipients,
+    replyTo: email.trim(),
+    subject: `Wakapadi Contact: ${subjectLabel}`,
+    html,
   });
 
-  let data = {};
-  try {
-    data = await res.json();
-  } catch {
-    data = {};
-  }
-
-  if (!res.ok) {
-    console.error('Resend API error', res.status, data);
+  if (!delivery.ok) {
+    console.error('Contact email delivery failed', delivery.provider, delivery.data);
     return jsonResponse(500, {
       success: false,
-      message: 'Failed to send your message. Please contact us on WhatsApp.',
+      message: delivery.data?.message || 'Failed to send your message. Please contact us on WhatsApp.',
     });
   }
 
-  return jsonResponse(200, { success: true });
+  return jsonResponse(200, { success: true, provider: delivery.provider });
 };

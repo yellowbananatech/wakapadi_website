@@ -1,24 +1,65 @@
-import { useState } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { Button } from './ui/button';
+import { CloudflareTurnstile, isTurnstileEnabled } from './CloudflareTurnstile';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from './ui/alert-dialog';
 
 interface ContactPageProps {
   onNavigate: (page: string) => void;
 }
 
+const EMPTY_FORM = {
+  name: '',
+  email: '',
+  phone: '',
+  subject: '',
+  message: '',
+  honeypot: '',
+};
+
+function getTurnstileTokenFromDom(): string | null {
+  const input = document.querySelector<HTMLInputElement>(
+    'input[name="cf-turnstile-response"]'
+  );
+  const value = input?.value?.trim();
+  return value || null;
+}
+
 export function ContactPage(_props: ContactPageProps) {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: '',
-    honeypot: '',
-  });
+  const [formData, setFormData] = useState(EMPTY_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileKey, setTurnstileKey] = useState(0);
+  const turnstileTokenRef = useRef<string | null>(null);
 
   const whatsappUrl = 'https://wa.me/447781183175';
+
+  const handleTurnstileVerify = useCallback((token: string) => {
+    turnstileTokenRef.current = token;
+    setTurnstileToken(token);
+  }, []);
+
+  const handleTurnstileExpire = useCallback(() => {
+    turnstileTokenRef.current = null;
+    setTurnstileToken(null);
+  }, []);
+
+  const resetFormState = () => {
+    setFormData(EMPTY_FORM);
+    turnstileTokenRef.current = null;
+    setTurnstileToken(null);
+    setTurnstileKey((k) => k + 1);
+    setErrorMessage('');
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -38,19 +79,23 @@ export function ContactPage(_props: ContactPageProps) {
 
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
       setErrorMessage('Please fill in all required fields.');
-      setSubmitStatus('error');
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email.trim())) {
       setErrorMessage('Please enter a valid email address.');
-      setSubmitStatus('error');
+      return;
+    }
+
+    const activeTurnstileToken =
+      turnstileTokenRef.current ?? turnstileToken ?? getTurnstileTokenFromDom();
+    if (isTurnstileEnabled && !activeTurnstileToken) {
+      setErrorMessage('Please complete the security check before sending.');
       return;
     }
 
     setIsSubmitting(true);
-    setSubmitStatus('idle');
     setErrorMessage('');
 
     try {
@@ -64,6 +109,7 @@ export function ContactPage(_props: ContactPageProps) {
           subject: formData.subject,
           message: formData.message,
           honeypot: formData.honeypot,
+          turnstileToken: activeTurnstileToken,
         }),
       });
 
@@ -73,17 +119,9 @@ export function ContactPage(_props: ContactPageProps) {
         throw new Error(data?.message ?? 'Failed to send message');
       }
 
-      setSubmitStatus('success');
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: '',
-        honeypot: '',
-      });
+      resetFormState();
+      setSuccessDialogOpen(true);
     } catch (error) {
-      setSubmitStatus('error');
       const msg = error instanceof Error ? error.message : '';
       setErrorMessage(
         msg ||
@@ -99,8 +137,36 @@ export function ContactPage(_props: ContactPageProps) {
     void submitMessage();
   };
 
+  const handleSuccessAck = () => {
+    setSuccessDialogOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen pt-32 bg-white pb-32">
+      <AlertDialog open={successDialogOpen} onOpenChange={setSuccessDialogOpen}>
+        <AlertDialogContent className="rounded-2xl sm:max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-slate-900 text-xl">
+              Message sent
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-600 text-base leading-relaxed">
+              Thank you for your message! We&apos;ll get back to you within 24 hours. For a prompt
+              response, please chat us up on Whatsapp.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="sm:justify-center">
+            <AlertDialogAction
+              onClick={handleSuccessAck}
+              className="text-white rounded-xl px-8 min-w-[120px]"
+              style={{ backgroundColor: '#2894ca' }}
+            >
+              OK
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div>
           <div className="text-center mb-12">
@@ -146,13 +212,7 @@ export function ContactPage(_props: ContactPageProps) {
           </div>
 
           <div className="glass rounded-2xl p-8 md:p-12 relative">
-            {submitStatus === 'success' && (
-              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-700">
-                Thank you for your message! We&apos;ll get back to you soon.
-              </div>
-            )}
-
-            {submitStatus === 'error' && errorMessage && (
+            {errorMessage && (
               <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700">
                 {errorMessage}
               </div>
@@ -254,16 +314,21 @@ export function ContactPage(_props: ContactPageProps) {
                 />
               </div>
 
-              <div className="relative z-20 pt-4 pb-2">
+              {isTurnstileEnabled && (
+                <div className="relative z-0">
+                  <CloudflareTurnstile
+                    key={turnstileKey}
+                    onVerify={handleTurnstileVerify}
+                    onExpire={handleTurnstileExpire}
+                  />
+                </div>
+              )}
+
+              <div className="relative z-20 pt-2 pb-2">
                 <button
-                  type="button"
-                  aria-disabled={isSubmitting}
-                  onPointerDown={(e) => {
-                    e.preventDefault();
-                    void submitMessage();
-                  }}
-                  onClick={() => void submitMessage()}
-                  className="block w-full h-14 text-base font-medium text-white rounded-xl transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#2894ca] cursor-pointer select-none"
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="block w-full h-14 text-base font-medium text-white rounded-xl transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#2894ca] cursor-pointer select-none disabled:opacity-60 disabled:cursor-wait"
                   style={{ backgroundColor: '#2894ca', pointerEvents: 'auto', touchAction: 'manipulation' }}
                 >
                   {isSubmitting ? 'Sending...' : 'Send Message'}
