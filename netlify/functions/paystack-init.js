@@ -1,22 +1,6 @@
 const PAYSTACK_BASE_URL = 'https://api.paystack.co';
 const { verifyToken } = require('./verify-turnstile');
-
-function getSiteUrl() {
-  const url = process.env.PAYSTACK_CALLBACK_URL || process.env.URL || process.env.DEPLOY_PRIME_URL || process.env.SITE_URL;
-  if (!url) return 'http://localhost:3000';
-  try {
-    return new URL(url).origin;
-  } catch {
-    return url.replace(/\/$/, '');
-  }
-}
-
-function getCallbackUrl() {
-  if (process.env.PAYSTACK_CALLBACK_URL) {
-    return process.env.PAYSTACK_CALLBACK_URL;
-  }
-  return `${getSiteUrl()}/payment-success`;
-}
+const { getPaymentSuccessUrl } = require('./_payment-utils');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
@@ -54,7 +38,7 @@ exports.handler = async (event) => {
     }
   }
 
-  const callbackUrl = getCallbackUrl();
+  const callbackUrl = getPaymentSuccessUrl();
 
   const res = await fetch(`${PAYSTACK_BASE_URL}/transaction/initialize`, {
     method: 'POST',

@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import { detectCurrency, getPackagePrice, toPaystackAmount, type CurrencyInfo } from '../utils/currency';
+import { detectCurrency, getPackagePrice, type CurrencyInfo } from '../utils/currency';
+import { initializePackagePayment } from '../utils/payments';
 import { supabase } from '../lib/supabaseClient';
 import { PACKAGES_BY_ID } from '../data/packages';
 
@@ -60,30 +61,20 @@ export function PackageDetails({ packageId, onNavigate }: PackageDetailsProps) {
         }
       }
 
-      const paystackAmount = toPaystackAmount(priceInfo!.amount, currency.code);
+      const redirectUrl = await initializePackagePayment(
+        email,
+        priceInfo!.amount,
+        currency.code,
+        {
+          packageId: pkg.id,
+          packageTitle: pkg.title,
+          packageLocation: pkg.location,
+          currency: currency.code,
+          amountUsd: pkg.priceUsd,
+        }
+      );
 
-      const res = await fetch('/.netlify/functions/paystack-init', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          amount: paystackAmount,
-          metadata: {
-            packageId: pkg.id,
-            packageTitle: pkg.title,
-            packageLocation: pkg.location,
-            currency: currency.code,
-            amountUsd: pkg.priceUsd,
-          },
-        }),
-      });
-
-      const data = await res.json();
-      if (!res.ok || !data?.status) {
-        throw new Error(data?.message ?? 'Failed to initialize payment');
-      }
-      
-      window.location.href = data.data.authorization_url;
+      window.location.href = redirectUrl;
     } catch (err: any) {
       setPayError(err?.message ?? 'Payment initialization failed');
       setPayLoading(false);
