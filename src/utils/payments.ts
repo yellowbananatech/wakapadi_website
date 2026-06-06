@@ -69,36 +69,19 @@ export async function initializePackagePayment(
   currencyCode: string,
   metadata: PackagePaymentMetadata
 ): Promise<string> {
-  const initPath = getPaymentInitPath();
-  const provider = getPaymentProvider();
-  // #region agent log
-  fetch('http://127.0.0.1:7544/ingest/b2e8afcf-9c4f-4f2c-bc27-daa529cd04f5',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'4c7d97'},body:JSON.stringify({sessionId:'4c7d97',location:'payments.ts:72',message:'initializePackagePayment start',data:{path:initPath,provider,amount,currencyCode,emailPresent:!!email},timestamp:Date.now(),hypothesisId:'A_D'})}).catch(()=>{});
-  // #endregion
-
-  const res = await fetch(initPath, {
+  const res = await fetch(getPaymentInitPath(), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(buildPaymentInitBody(email, amount, currencyCode, metadata)),
   });
 
-  // #region agent log
-  fetch('http://127.0.0.1:7544/ingest/b2e8afcf-9c4f-4f2c-bc27-daa529cd04f5',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'4c7d97'},body:JSON.stringify({sessionId:'4c7d97',location:'payments.ts:83',message:'fetch response received',data:{status:res.status,ok:res.ok,statusText:res.statusText,contentType:res.headers.get('content-type')},timestamp:Date.now(),hypothesisId:'D'})}).catch(()=>{});
-  // #endregion
+  const data = await res.json().catch(() => ({}));
 
-  const data = await res.json().catch((e: Error) => ({ _parseError: e.message }));
-
-  // #region agent log
-  fetch('http://127.0.0.1:7544/ingest/b2e8afcf-9c4f-4f2c-bc27-daa529cd04f5',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'4c7d97'},body:JSON.stringify({sessionId:'4c7d97',location:'payments.ts:88',message:'parsed response body',data:{dataStatus:(data as any)?.status,hasDataObj:!!(data as any)?.data,hasLink:!!(data as any)?.data?.link,errorMsg:(data as any)?.message,parseError:(data as any)?._parseError,isSuccess:isPaymentInitSuccess(data as any)},timestamp:Date.now(),hypothesisId:'B_C_E'})}).catch(()=>{});
-  // #endregion
-
-  if (!res.ok || !isPaymentInitSuccess(data as any)) {
-    // #region agent log
-    fetch('http://127.0.0.1:7544/ingest/b2e8afcf-9c4f-4f2c-bc27-daa529cd04f5',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'4c7d97'},body:JSON.stringify({sessionId:'4c7d97',location:'payments.ts:93',message:'PAYMENT INIT FAILED — throwing error',data:{resOk:res.ok,errorMsg:(data as any)?.message,fullData:data},timestamp:Date.now(),hypothesisId:'A_B_C_D_E'})}).catch(()=>{});
-    // #endregion
-    throw new Error((data as any)?.message ?? 'Failed to initialize payment');
+  if (!res.ok || !isPaymentInitSuccess(data)) {
+    throw new Error(data?.message ?? 'Failed to initialize payment');
   }
 
-  const redirectUrl = getPaymentRedirectUrl(data as any);
+  const redirectUrl = getPaymentRedirectUrl(data);
   if (!redirectUrl) {
     throw new Error('Payment gateway did not return a checkout link');
   }
