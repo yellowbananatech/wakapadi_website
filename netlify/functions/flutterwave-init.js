@@ -24,6 +24,9 @@ exports.handler = async (event) => {
   }
 
   const secretKey = process.env.FLUTTERWAVE_SECRET_KEY;
+  // #region agent log
+  console.log('[DEBUG-4c7d97] H-A: secretKey present=' + !!secretKey + ' len=' + (secretKey?.length ?? 0) + ' prefix=' + (secretKey?.substring(0, 12) ?? 'n/a'));
+  // #endregion
   if (!secretKey) {
     return jsonResponse(500, {
       status: 'error',
@@ -107,6 +110,10 @@ exports.handler = async (event) => {
   } catch {
     data = {};
   }
+
+  // #region agent log
+  console.log('[DEBUG-4c7d97] H-B/C: FLW API httpStatus=' + res.status + ' dataStatus=' + data?.status + ' dataMsg=' + data?.message + ' hasLink=' + !!(data?.data?.link));
+  // #endregion
 
   if (!res.ok || data?.status !== 'success') {
     return jsonResponse(res.status || 500, {
