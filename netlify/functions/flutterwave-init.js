@@ -1,6 +1,5 @@
 const FLUTTERWAVE_API = 'https://api.flutterwave.com/v3/payments';
 const { getPaymentSuccessUrl, getSiteUrl, jsonResponse } = require('./_payment-utils');
-const { verifyToken } = require('./verify-turnstile');
 
 function toFlutterwaveAmount(amount, currencyCode) {
   const value = Number(amount);
@@ -41,8 +40,7 @@ exports.handler = async (event) => {
     return jsonResponse(400, { status: 'error', message: 'Invalid JSON body' });
   }
 
-  const { email, amount, currency, metadata, turnstileToken, customerName, customerPhone } =
-    payload;
+  const { email, amount, currency, metadata, customerName, customerPhone } = payload;
 
   if (!email || amount == null || !currency) {
     return jsonResponse(400, {
@@ -52,27 +50,8 @@ exports.handler = async (event) => {
   }
 
   // #region agent log
-  console.log('[DEBUG-4c7d97] H-F: TURNSTILE_SECRET_KEY set=' + !!process.env.TURNSTILE_SECRET_KEY + ' tokenPresent=' + !!turnstileToken);
+  console.log('[DEBUG-4c7d97] H-F: TURNSTILE check skipped — TURNSTILE_SECRET_KEY set=' + !!process.env.TURNSTILE_SECRET_KEY + ' (payments do not use Turnstile)');
   // #endregion
-  // #region agent log
-  console.log('[DEBUG-4c7d97] H-F: TURNSTILE_SECRET_KEY set=' + !!process.env.TURNSTILE_SECRET_KEY + ' turnstileToken present=' + !!turnstileToken + ' email present=' + !!email + ' amount=' + amount + ' currency=' + currency);
-  // #endregion
-  if (process.env.TURNSTILE_SECRET_KEY) {
-    if (!turnstileToken) {
-      // #region agent log
-      console.log('[DEBUG-4c7d97] H-F CONFIRMED: returning 403 Security verification required — no token in payment request');
-      // #endregion
-      return jsonResponse(403, { status: 'error', message: 'Security verification required' });
-    }
-    try {
-      const verified = await verifyToken(turnstileToken);
-      if (!verified) {
-        return jsonResponse(403, { status: 'error', message: 'Security verification failed' });
-      }
-    } catch {
-      return jsonResponse(500, { status: 'error', message: 'Verification service error' });
-    }
-  }
 
   let paymentAmount;
   try {
