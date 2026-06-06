@@ -51,8 +51,17 @@ exports.handler = async (event) => {
     });
   }
 
+  // #region agent log
+  console.log('[DEBUG-4c7d97] H-F: TURNSTILE_SECRET_KEY set=' + !!process.env.TURNSTILE_SECRET_KEY + ' tokenPresent=' + !!turnstileToken);
+  // #endregion
+  // #region agent log
+  console.log('[DEBUG-4c7d97] H-F: TURNSTILE_SECRET_KEY set=' + !!process.env.TURNSTILE_SECRET_KEY + ' turnstileToken present=' + !!turnstileToken + ' email present=' + !!email + ' amount=' + amount + ' currency=' + currency);
+  // #endregion
   if (process.env.TURNSTILE_SECRET_KEY) {
     if (!turnstileToken) {
+      // #region agent log
+      console.log('[DEBUG-4c7d97] H-F CONFIRMED: returning 403 Security verification required — no token in payment request');
+      // #endregion
       return jsonResponse(403, { status: 'error', message: 'Security verification required' });
     }
     try {
