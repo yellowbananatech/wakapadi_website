@@ -20,7 +20,7 @@ const LEGAL_PAGES: Record<LegalPage, LegalPageInfo> = {
     title: 'Privacy & Cookie Policy',
     content: `# Privacy & Cookie Policy
 
-**Last Updated: January 2025**
+**Last Updated: June 14, 2026**
 
 ## 1. Introduction
 
@@ -99,15 +99,17 @@ We may update this Privacy & Cookie Policy from time to time. We will notify you
 ## 11. Contact Us
 
 If you have questions about this Privacy & Cookie Policy, please contact us at:
-- Contact form: Visit the Contact Us page
-- Address: Defoe Rd, Ipswich, IP1 6SN, UK`
+- Send us an e-mail using the contact form on the Support Page
+- WhatsApp: Use the WhatsApp button on the Support Page
+- UK Office Address: Defoe Rd, Ipswich, IP1 6SN, UK
+- Nigeria Office: 1B Joseph Gomwalk Way, Jos 930218, Plateau State`
   },
   'acceptable-use': {
     id: 'acceptable-use',
     title: 'Acceptable Use Policy',
     content: `# Acceptable Use Policy
 
-**Last Updated: January 2025**
+**Last Updated: June 14, 2026**
 
 ## 1. Introduction
 
@@ -167,14 +169,18 @@ We may update this Policy from time to time. Continued use of our services after
 
 ## 10. Contact Us
 
-For questions about this Policy, contact us through the Contact Us page.`
+For questions about this Policy, please contact us at:
+- Send us an e-mail using the contact form on the Support Page
+- WhatsApp: Use the WhatsApp button on the Support Page
+- UK Office Address: Defoe Rd, Ipswich, IP1 6SN, UK
+- Nigeria Office: 1B Joseph Gomwalk Way, Jos 930218, Plateau State`
   },
   refund: {
     id: 'refund',
     title: 'Refund Policy',
     content: `# Refund Policy
 
-**Last Updated: January 2025**
+**Last Updated: June 14, 2026**
 
 ## 1. General Refund Policy
 
@@ -224,15 +230,17 @@ The following are generally non-refundable:
 ## 9. Contact Us
 
 For refund requests or questions about this policy, contact us at:
-- Contact form: Visit the Contact Us page
-- WhatsApp: Use the WhatsApp button on the Contact Us page`
+- Send us an e-mail using the contact form on the Support Page
+- WhatsApp: Use the WhatsApp button on the Support Page
+- UK Office Address: Defoe Rd, Ipswich, IP1 6SN, UK
+- Nigeria Office: 1B Joseph Gomwalk Way, Jos 930218, Plateau State`
   },
   terms: {
     id: 'terms',
     title: 'Terms of Use',
     content: `# Terms of Use
 
-**Last Updated: January 2025**
+**Last Updated: June 14, 2026**
 
 ## 1. Agreement to Terms
 
@@ -298,14 +306,18 @@ We may modify these Terms at any time. Continued use of our services after chang
 
 ## 13. Contact Us
 
-For questions about these Terms, contact us through the Contact Us page.`
+For questions about these Terms, please contact us at:
+- Send us an e-mail using the contact form on the Support Page
+- WhatsApp: Use the WhatsApp button on the Support Page
+- UK Office Address: Defoe Rd, Ipswich, IP1 6SN, UK
+- Nigeria Office: 1B Joseph Gomwalk Way, Jos 930218, Plateau State`
   },
   'user-services': {
     id: 'user-services',
     title: 'User Services Agreement',
     content: `# User Services Agreement
 
-**Last Updated: January 2025**
+**Last Updated: June 14, 2026**
 
 ## 1. Parties
 
@@ -388,16 +400,17 @@ This Agreement, together with our Terms of Use and Privacy Policy, constitutes t
 ## 12. Contact Information
 
 Wakapadi Lifestyle Limited
-Defoe Rd, Ipswich, IP1 6SN, UK
-Contact: Use the Contact Us page
-WhatsApp: Use the WhatsApp button on the Contact Us page`
+- Send us an e-mail using the contact form on the Support Page
+- WhatsApp: Use the WhatsApp button on the Support Page
+- UK Office Address: Defoe Rd, Ipswich, IP1 6SN, UK
+- Nigeria Office: 1B Joseph Gomwalk Way, Jos 930218, Plateau State`
   },
   'data-processing': {
     id: 'data-processing',
     title: 'Data Processing Agreement',
     content: `# Data Processing Agreement
 
-**Last Updated: January 2025**
+**Last Updated: June 14, 2026**
 
 ## 1. Definitions
 
@@ -489,9 +502,13 @@ We retain Personal Data only for as long as necessary:
 
 ## 12. Contact and Complaints
 
-For data protection inquiries or complaints:
-- Contact form: Visit the Contact Us page
-- You also have the right to lodge a complaint with your local data protection authority
+For data protection inquiries or complaints, please contact us at:
+- Send us an e-mail using the contact form on the Support Page
+- WhatsApp: Use the WhatsApp button on the Support Page
+- UK Office Address: Defoe Rd, Ipswich, IP1 6SN, UK
+- Nigeria Office: 1B Joseph Gomwalk Way, Jos 930218, Plateau State
+
+You also have the right to lodge a complaint with your local data protection authority.
 
 ## 13. Updates
 
