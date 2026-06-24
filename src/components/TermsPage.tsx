@@ -20,7 +20,7 @@ const LEGAL_PAGES: Record<LegalPage, LegalPageInfo> = {
     title: 'Privacy & Cookie Policy',
     content: `# Privacy & Cookie Policy
 
-**Last Updated: June 14, 2026**
+**Last Updated: June 14, 2025**
 
 ## 1. Introduction
 
