@@ -189,7 +189,7 @@ Wakapadi Lifestyle Limited ("we," "our," or "us") strives to provide excellent s
 ## 2. Booking Cancellations
 
 ### 2.1 Cancellation by Customer
-- Cancellations made more than 30 days before travel: Full refund minus 10% administrative fee
+- Cancellations made more than 30 days before travel: Full refund minus 20% administrative fee
 - Cancellations made 15-30 days before travel: 50% refund
 - Cancellations made less than 15 days before travel: No refund
 
