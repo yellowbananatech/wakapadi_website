@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Wakapadi Women's Zanzibar Retreat 2027</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ocean: #0D2D4A;
+      --turquoise: #48CAE4;
+      --gold: #C9A84C;
+      --gold-light: #E8D5B0;
+      --white: #FFFFFF;
+      --cream: #FBF5EC;
+      --text: #2C3E50;
+      --text-muted: #5D6D7E;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    @page { size: A4; margin: 0; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9.5pt;
+      line-height: 1.55;
+      color: var(--text);
+      background: #e8e8e8;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .page {
+      width: 210mm;
+      height: 297mm;
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+      background: var(--white);
+    }
+    .page:last-child { page-break-after: auto; }
+    h1, h2, h3, h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      color: var(--ocean);
+    }
+    h1 { font-size: 36pt; line-height: 1.1; letter-spacing: 0.02em; }
+    h2 { font-size: 22pt; margin-bottom: 6mm; }
+    h3 { font-size: 14pt; margin-bottom: 4mm; color: var(--ocean); }
+    h4 { font-size: 11pt; margin-bottom: 2mm; }
+    p { margin-bottom: 3mm; color: var(--text-muted); }
+    .gold-line { width: 40mm; height: 1px; background: var(--gold); margin: 4mm 0; }
+    .gold-line.center { margin-left: auto; margin-right: auto; }
+    .label {
+      font-size: 7pt;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 500;
+    }
+    .padding { padding: 16mm 18mm; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8mm; }
+    ul.check { list-style: none; }
+    ul.check li {
+      padding-left: 6mm;
+      position: relative;
+      margin-bottom: 2.5mm;
+      font-size: 9pt;
+      color: var(--text-muted);
+    }
+    ul.check li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-weight: 600;
+    }
+    ul.diamond-list, ul.cross-list { list-style: none; }
+    ul.diamond-list li, ul.cross-list li {
+      padding-left: 5mm;
+      position: relative;
+      margin-bottom: 1.8mm;
+      font-size: 7.5pt;
+      line-height: 1.4;
+      color: var(--text-muted);
+    }
+    ul.diamond-list li::before {
+      content: '✦';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-size: 7pt;
+    }
+    ul.cross-list li::before {
+      content: '✗';
+      position: absolute;
+      left: 0;
+      color: #b07a7a;
+      font-size: 7pt;
+    }
+    .cover {
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      color: var(--white);
+    }
+    .cover-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(13,45,74,0.35) 0%, rgba(13,45,74,0.75) 55%, rgba(13,45,74,0.92) 100%);
+    }
+    .cover-content {
+      position: relative;
+      z-index: 1;
+      padding: 0 20mm 22mm;
+      text-align: center;
+    }
+    .cover .brand {
+      position: absolute;
+      top: 18mm;
+      left: 0; right: 0;
+      text-align: center;
+      z-index: 1;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14pt;
+      letter-spacing: 0.35em;
+      color: var(--white);
+    }
+    .cover h1 { color: var(--white); font-size: 32pt; margin-top: 4mm; }
+    .cover .subtitle {
+      font-size: 9pt;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin: 5mm 0;
+    }
+    .cover .meta { font-size: 9pt; color: rgba(255,255,255,0.9); margin-top: 6mm; }
+    .cover .tagline { font-style: italic; font-family: 'Cormorant Garamond', serif; font-size: 11pt; margin-top: 8mm; opacity: 0.95; }
+    .letter-layout { display: grid; grid-template-columns: 72mm 1fr; gap: 10mm; height: 100%; padding: 18mm 20mm; }
+    .letter-photo {
+      height: 100%;
+      min-height: 240mm;
+      background-size: cover;
+      background-position: center top;
+      border-radius: 2px;
+    }
+    .letter-body h2 { margin-bottom: 6mm; }
+    .letter-body .signature { margin-top: 8mm; font-family: 'Cormorant Garamond', serif; font-size: 12pt; color: var(--ocean); }
+    .fact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4mm 12mm;
+      margin: 8mm 0;
+    }
+    .fact-item { border-left: 2px solid var(--gold); padding-left: 4mm; }
+    .fact-item strong { display: block; font-size: 7pt; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1mm; }
+    .fact-item span { font-size: 10pt; color: var(--ocean); font-weight: 500; }
+    .banner-strip {
+      height: 45mm;
+      background-size: cover;
+      background-position: center;
+      margin: -16mm -18mm 10mm;
+      position: relative;
+    }
+    .banner-strip::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(13,45,74,0.7), rgba(72,202,228,0.35));
+    }
+    .slim-banner {
+      height: 28mm;
+      background-size: cover;
+      background-position: center;
+      margin: -16mm -18mm 6mm;
+    }
+    .col-card img {
+      width: 100%;
+      height: 42mm;
+      object-fit: cover;
+      margin-bottom: 4mm;
+    }
+    .col-card h4 { font-family: 'Cormorant Garamond', serif; font-size: 12pt; }
+    .hero-split { display: grid; grid-template-rows: 95mm 1fr; height: 100%; }
+    .hero-img {
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .hero-img .inset {
+      position: absolute;
+      bottom: -12mm;
+      right: 15mm;
+      width: 55mm;
+      height: 40mm;
+      border: 3px solid var(--white);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      background-size: cover;
+      background-position: center;
+    }
+    .timeline { border-left: 2px solid var(--gold); padding-left: 8mm; margin-left: 4mm; }
+    .day-block { margin-bottom: 9mm; position: relative; }
+    .day-block::before {
+      content: '';
+      position: absolute;
+      left: -11.5mm;
+      top: 2mm;
+      width: 6mm;
+      height: 6mm;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 2px solid var(--white);
+    }
+    .day-block .day-label {
+      font-size: 7pt;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--turquoise);
+      font-weight: 600;
+    }
+    .day-block h4 { font-family: 'Cormorant Garamond', serif; font-size: 13pt; margin: 1mm 0 2mm; }
+    .day-block ul { margin-left: 4mm; color: var(--text-muted); font-size: 8.5pt; }
+    .day-block ul li { margin-bottom: 1mm; }
+    .day-block .italic { font-style: italic; font-family: 'Cormorant Garamond', serif; color: var(--ocean); font-size: 9.5pt; margin-top: 2mm; }
+    .day-thumb {
+      float: right;
+      width: 28mm;
+      height: 22mm;
+      object-fit: cover;
+      margin: 0 0 3mm 4mm;
+      border-radius: 1px;
+    }
+    .masonry {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4mm;
+      margin-top: 6mm;
+    }
+    .masonry .item img { width: 100%; height: 38mm; object-fit: cover; }
+    .masonry .item p { font-size: 7.5pt; margin-top: 2mm; line-height: 1.4; }
+    .masonry .item strong { display: block; font-size: 8pt; color: var(--ocean); margin-top: 2mm; font-family: 'Cormorant Garamond', serif; }
+    .package-page { background: var(--cream); }
+    .package-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 6mm; margin-top: 4mm; }
+    .inclusions-col h3 { font-size: 11pt; margin-bottom: 2mm; }
+    .inclusions-col .price-line {
+      font-size: 8pt;
+      color: var(--ocean);
+      font-weight: 600;
+      margin-bottom: 4mm;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .exclusions-col {
+      background: var(--white);
+      padding: 5mm;
+      border: 1px solid var(--gold-light);
+    }
+    .exclusions-col h3 { font-size: 10pt; margin-bottom: 3mm; color: var(--ocean); }
+    .package-footnote {
+      margin-top: 5mm;
+      padding-top: 4mm;
+      border-top: 1px solid var(--gold-light);
+      font-size: 7.5pt;
+      font-style: italic;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .price-box {
+      text-align: center;
+      padding: 8mm;
+      border: 1px solid var(--gold-light);
+      background: var(--cream);
+      margin: 6mm 0;
+    }
+    .price-box .amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32pt;
+      color: var(--gold);
+      font-weight: 600;
+    }
+    .steps { counter-reset: step; list-style: none; margin: 6mm 0; }
+    .steps li {
+      counter-increment: step;
+      padding-left: 10mm;
+      position: relative;
+      margin-bottom: 4mm;
+      font-size: 9pt;
+      color: var(--text-muted);
+    }
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      width: 6mm;
+      height: 6mm;
+      border-radius: 50%;
+      background: var(--ocean);
+      color: var(--white);
+      font-size: 7pt;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+    .full-bleed-text {
+      position: relative;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+    }
+    .full-bleed-text .overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(13,45,74,0.88) 0%, rgba(13,45,74,0.5) 50%, rgba(13,45,74,0.35) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 22mm;
+      color: var(--white);
+    }
+    .full-bleed-text h2 { color: var(--white); font-size: 26pt; margin-bottom: 8mm; }
+    .full-bleed-text .if-block { margin-bottom: 6mm; }
+    .full-bleed-text .if-block strong { color: var(--gold-light); font-size: 10pt; display: block; margin-bottom: 2mm; }
+    .full-bleed-text p { color: rgba(255,255,255,0.9); }
+    .payment-panel {
+      background: var(--ocean);
+      color: var(--white);
+      padding: 5mm 6mm;
+      margin: 4mm 0 5mm;
+    }
+    .payment-panel h3 { color: var(--gold-light); font-size: 11pt; margin-bottom: 3mm; }
+    .payment-panel p { color: rgba(255,255,255,0.9); font-size: 7.5pt; margin-bottom: 2mm; }
+    .payment-panel strong { color: var(--gold-light); }
+    .payment-panel .deadline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12pt;
+      color: var(--gold);
+      margin: 3mm 0;
+    }
+    .travel-notes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3mm 8mm;
+      font-size: 7pt;
+      line-height: 1.45;
+    }
+    .travel-notes-grid h4 {
+      font-size: 7.5pt;
+      color: var(--ocean);
+      margin-bottom: 1mm;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .travel-notes-grid p { font-size: 7pt; margin-bottom: 0; }
+    .closing-page { display: flex; flex-direction: column; height: 100%; background: var(--cream); }
+    .closing-hero {
+      height: 115mm;
+      background-size: cover;
+      background-position: center;
+      flex-shrink: 0;
+    }
+    .closing-body { padding: 8mm 18mm 10mm; flex: 1; text-align: center; }
+    .closing-statement {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16pt;
+      color: var(--ocean);
+      line-height: 1.35;
+      margin-bottom: 3mm;
+    }
+    .closing-sub {
+      font-style: italic;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 10pt;
+      color: var(--text-muted);
+      margin-bottom: 5mm;
+    }
+    .closing-copy { font-size: 8pt; text-align: left; color: var(--text-muted); line-height: 1.55; margin-bottom: 5mm; }
+    .closing-copy p { font-size: 8pt; margin-bottom: 2.5mm; }
+    .contact-gold-box {
+      background: var(--white);
+      border: 1px solid var(--gold);
+      padding: 4mm 6mm;
+      text-align: left;
+      font-size: 7.5pt;
+      margin-bottom: 4mm;
+    }
+    .contact-gold-box p { margin-bottom: 1.5mm; color: var(--text); }
+    .final-tagline {
+      font-size: 6.5pt;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: auto;
+    }
+    .page-num {
+      position: absolute;
+      bottom: 10mm;
+      right: 18mm;
+      font-size: 7pt;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+    }
+  </style>
+</head>
+<body>
+
+<!-- PAGE 1: COVER -->
+<div class="page cover" style="background-image: url('images/cover.jpg');">
+  <div class="cover-overlay"></div>
+  <div class="brand">W A K A P A D I</div>
+  <div class="cover-content">
+    <div class="label">Lifestyle Limited Presents</div>
+    <h1>WOMEN'S ZANZIBAR<br/>RETREAT 2027</h1>
+    <div class="gold-line center"></div>
+    <div class="subtitle">Luxury Retreat &bull; Conference &bull; Culture &bull; Wellness &bull; Adventure</div>
+    <div class="meta">22 – 29 August 2027 &nbsp;|&nbsp; Zanzibar, Tanzania &nbsp;|&nbsp; 6 Nights · 7 Days</div>
+    <div class="tagline">An intimate journey for ten remarkable women.</div>
+  </div>
+</div>
+
+<!-- PAGE 2: WELCOME LETTER -->
+<div class="page">
+  <div class="letter-layout">
+    <div class="letter-photo" style="background-image: url('images/letter.jpg');"></div>
+    <div class="letter-body">
+      <div class="label">A Letter to You</div>
+      <h2>Dear Sister,</h2>
+      <div class="gold-line"></div>
+      <p>There comes a moment in every woman's journey when she pauses — not because she is tired, but because she has earned the right to breathe deeply, to be seen, and to be celebrated.</p>
+      <p>The Wakapadi Women's Zanzibar Retreat was created for that moment.</p>
+      <p>For ten extraordinary women aged 40 to 59, we have curated something rare: a week that honours your ambition without demanding your exhaustion. Wakapadi arranges your travel, accommodation, and island experiences — while the conference and retreat sessions are organized collectively by the women attending, in a space that is entirely your own.</p>
+      <p>Zanzibar is not merely a destination. It is a canvas. From the historic corridors of Stone Town to the crystalline waters of Nungwi, every day has been designed to restore, inspire, and reconnect you with the woman you are becoming.</p>
+      <p><strong style="color: var(--ocean);">This is your invitation.</strong></p>
+      <div class="signature">With warmth and intention,<br/><br/><em>The Wakapadi Team</em><br/>Wakapadi Lifestyle Limited</div>
+    </div>
+  </div>
+  <div class="page-num">02</div>
+</div>
+
+<!-- PAGE 3: AT A GLANCE -->
+<div class="page padding">
+  <div class="banner-strip" style="background-image: url('images/glance.jpg');"></div>
+  <div class="label">Overview</div>
+  <h2>Your Retreat, At a Glance</h2>
+  <div class="gold-line"></div>
+  <div class="fact-grid">
+    <div class="fact-item"><strong>Dates</strong><span>22 – 29 August 2027</span></div>
+    <div class="fact-item"><strong>Duration</strong><span>6 nights / 7 days</span></div>
+    <div class="fact-item"><strong>Destination</strong><span>Zanzibar, Tanzania</span></div>
+    <div class="fact-item"><strong>Group Size</strong><span>10 women (ages 40–59)</span></div>
+    <div class="fact-item"><strong>Accommodation</strong><span>3 nights villa + 3 nights boutique hotel</span></div>
+    <div class="fact-item"><strong>Investment</strong><span>₦2,957,000 per person (double occupancy)</span></div>
+    <div class="fact-item"><strong>Travel by</strong><span>Wakapadi Lifestyle Limited</span></div>
+  </div>
+  <h3 style="margin-top: 8mm;">What Awaits You</h3>
+  <p>A thoughtfully curated week blending cultural immersion, wellness, adventure, and sisterhood — with travel logistics expertly handled by Wakapadi. Conference and retreat gatherings are organized by the attending women themselves. This is not a tour. It is a retreat — intimate, intentional, and entirely yours.</p>
+  <div class="page-num">03</div>
+</div>
+
+<!-- PAGE 4: WHY ZANZIBAR -->
+<div class="page padding">
+  <div class="label">The Experience</div>
+  <h2>Why Zanzibar. Why Now. Why You.</h2>
+  <div class="gold-line"></div>
+  <div class="three-col" style="margin-top: 8mm;">
+    <div class="col-card">
+      <img src="images/stoneTown.jpg" alt="Stone Town Zanzibar" />
+      <h4>An Island of Stories</h4>
+      <p>Zanzibar has drawn travellers for centuries. Today, it draws women like you: accomplished, curious, and ready for something more meaningful than another holiday.</p>
+    </div>
+    <div class="col-card">
+      <img src="images/nigerian-women-group.jpg" alt="Ten women on sandbank" />
+      <h4>A Retreat, Not a Tour</h4>
+      <p>With only ten women, every conversation matters. Every meal is shared. Every sunset is witnessed together. This intimacy is deliberate.</p>
+    </div>
+    <div class="col-card">
+      <img src="images/dhow.jpg" alt="Dhow cruise" />
+      <h4>The Woman You Are Becoming</h4>
+      <p>At 40, 50, and beyond, you have built empires. This retreat is about returning renewed — with clarity, connection, and quiet confidence.</p>
+    </div>
+  </div>
+  <div class="page-num">04</div>
+</div>
+
+<!-- PAGE 5: VILLA -->
+<div class="page">
+  <div class="hero-split">
+    <div class="hero-img" style="background-image: url('images/villa.jpg');">
+      <div class="inset" style="background-image: url('images/villaInterior.jpg');"></div>
+    </div>
+    <div class="padding" style="padding-top: 16mm;">
+      <div class="label">Accommodation</div>
+      <h2>Private Retreat Villa</h2>
+      <p style="color: var(--turquoise); font-weight: 500; margin-bottom: 4mm;">Zanzibar City — Nights 1, 2 & 3 &nbsp;|&nbsp; Chukwani Beach</p>
+      <div class="gold-line"></div>
+      <div class="two-col">
+        <div>
+          <p>Tucked away near the tranquil shores of Chukwani Beach, your private retreat villa serves as the group's home base for the first three nights. Designed for intimacy and comfort, this five-bedroom residence offers beach access, garden space, and the privacy to gather on your own terms.</p>
+          <p style="font-style: italic; font-family: 'Cormorant Garamond', serif; color: var(--ocean);">Your retreat begins the moment you arrive.</p>
+        </div>
+        <div>
+          <h4>Villa Features</h4>
+          <ul class="check">
+            <li>5 private bedrooms</li>
+            <li>Direct beach access</li>
+            <li>Lush private garden</li>
+            <li>Self-catering kitchen</li>
+            <li>Laundry facilities</li>
+            <li>24-hour power supply</li>
+            <li>24-hour security</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">05</div>
+</div>
+
+<!-- PAGE 6: HOTEL -->
+<div class="page">
+  <div class="hero-split">
+    <div class="hero-img" style="background-image: url('images/hotel.jpg');">
+      <div class="inset" style="background-image: url('images/hotelBreakfast.jpg');"></div>
+    </div>
+    <div class="padding" style="padding-top: 16mm;">
+      <div class="label">Accommodation</div>
+      <h2>Nungwi Garden Boutique Hotel</h2>
+      <p style="color: var(--turquoise); font-weight: 500; margin-bottom: 4mm;">Nungwi — Nights 4, 5 & 6 &nbsp;|&nbsp; Northern Zanzibar</p>
+      <div class="gold-line"></div>
+      <div class="two-col">
+        <div>
+          <p>From Zanzibar City to the northern coast — your stay transitions to Nungwi Garden Boutique Hotel, perched on Zanzibar's northern tip. Spacious rooms with ocean-view balconies overlook tropical gardens and the Indian Ocean beyond.</p>
+          <p style="font-style: italic; font-family: 'Cormorant Garamond', serif; color: var(--ocean);">From villa to coast — seamlessly.</p>
+        </div>
+        <div>
+          <h4>Hotel Features</h4>
+          <ul class="check">
+            <li>Spacious, elegantly appointed rooms</li>
+            <li>Private ocean-view balconies</li>
+            <li>Lush tropical gardens</li>
+            <li>Complimentary buffet breakfast daily</li>
+            <li>Prime Nungwi beach access</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-num">06</div>
+</div>
+
+<!-- PAGE 7: ITINERARY DAYS 1-3 -->
+<div class="page padding">
+  <div class="label">Itinerary</div>
+  <h2>Gathering &amp; Retreat — Zanzibar City</h2>
+  <p style="font-size: 8pt; margin-bottom: 4mm;">Conference and retreat sessions are organized collectively by the attending women. Wakapadi provides travel logistics and accommodation.</p>
+  <div class="gold-line"></div>
+  <div class="timeline">
+    <div class="day-block">
+      <img class="day-thumb" src="images/villa.jpg" alt="" />
+      <div class="day-label">Day 1 — Saturday, 22 August</div>
+      <h4>Arrival &amp; Welcome</h4>
+      <ul>
+        <li>Private airport transfer on arrival</li>
+        <li>Check-in at Chukwani Beach Villa</li>
+        <li>Welcome networking evening</li>
+        <li>Light refreshments and introductions</li>
+      </ul>
+      <div class="italic">The journey begins. Ten women. One island. Infinite possibility.</div>
+    </div>
+    <div class="day-block">
+      <img class="day-thumb" src="images/conference.jpg" alt="" />
+      <div class="day-label">Day 2 — Sunday, 23 August</div>
+      <h4>Conference Day One</h4>
+      <ul>
+        <li>Morning conference sessions — organized by the group</li>
+        <li>Leadership discussions and workshops among attendees</li>
+        <li>Networking breaks throughout the day</li>
+        <li>Sunset reflection session</li>
+      </ul>
+      <div class="italic">Lead with intention. Connect with purpose.</div>
+    </div>
+    <div class="day-block">
+      <img class="day-thumb" src="images/dinner.jpg" alt="" />
+      <div class="day-label">Day 3 — Monday, 24 August</div>
+      <h4>Retreat Day &amp; Farewell Dinner</h4>
+      <ul>
+        <li>Personal development and wellness discussions — group-led</li>
+        <li>Business strategy sessions among attendees</li>
+        <li>Afternoon workshops organized collectively</li>
+        <li>Farewell dinner together</li>
+      </ul>
+      <div class="italic">Close one chapter. Open the next.</div>
+    </div>
+  </div>
+  <div class="page-num">07</div>
+</div>
+
+<!-- PAGE 8: ITINERARY DAYS 4-7 -->
+<div class="page padding">
+  <div class="label">Itinerary</div>
+  <h2>Culture, Adventure &amp; Departure</h2>
+  <div class="gold-line"></div>
+  <div class="timeline">
+    <div class="day-block">
+      <img class="day-thumb" src="images/stoneTown.jpg" alt="" />
+      <div class="day-label">Day 4 — Tuesday, 25 August</div>
+      <h4>Stone Town &amp; The Sea</h4>
+      <ul>
+        <li>Guided Stone Town walking tour, Old Fort &amp; markets</li>
+        <li>Nakupenda Sandbank &amp; Prison Island</li>
+        <li>Traditional dhow cruise with snorkelling &amp; included seafood lunch</li>
+        <li>Transfer to Nungwi Garden Boutique Hotel</li>
+      </ul>
+      <div class="italic">History beneath your feet. Horizon ahead.</div>
+    </div>
+    <div class="day-block">
+      <img class="day-thumb" src="images/kayak.jpg" alt="" />
+      <div class="day-label">Day 5 — Wednesday, 26 August</div>
+      <h4>Ocean &amp; Sky</h4>
+      <ul>
+        <li>Transparent kayaking experience</li>
+        <li>Professional drone photography session</li>
+      </ul>
+      <div class="italic">See the island — and yourself — from an entirely new perspective.</div>
+    </div>
+    <div class="day-block">
+      <img class="day-thumb" src="images/turtle.jpg" alt="" />
+      <div class="day-label">Day 6 — Thursday, 27 August</div>
+      <h4>Leisure &amp; Wonder</h4>
+      <ul>
+        <li>Nungwi Turtle Aquarium guided visit</li>
+        <li>Free day for personal exploration, beach time, or rest</li>
+      </ul>
+      <div class="italic">No agenda. Only choice.</div>
+    </div>
+    <div class="day-block">
+      <img class="day-thumb" src="images/departure.jpg" alt="" />
+      <div class="day-label">Day 7 — Friday, 28 August</div>
+      <h4>Departure</h4>
+      <ul>
+        <li>Buffet breakfast at Nungwi Garden Boutique Hotel</li>
+        <li>Checkout and private airport transfer</li>
+        <li>Departure</li>
+      </ul>
+      <div class="italic">You arrived as ten women. You leave as sisters.</div>
+    </div>
+  </div>
+  <div class="page-num">08</div>
+</div>
+
+<!-- PAGE 9: EXPERIENCES -->
+<div class="page padding">
+  <div class="label">Highlights</div>
+  <h2>Experiences That Stay With You</h2>
+  <div class="gold-line"></div>
+  <div class="masonry">
+    <div class="item">
+      <img src="images/snorkel.jpg" alt="Snorkelling" />
+      <strong>Snorkelling</strong>
+      <p>Crystal waters and coral gardens beneath the Indian Ocean.</p>
+    </div>
+    <div class="item">
+      <img src="images/stoneTown.jpg" alt="Stone Town" />
+      <strong>Stone Town Heritage</strong>
+      <p>UNESCO streets and centuries of culture in every carved door.</p>
+    </div>
+    <div class="item">
+      <img src="images/dhow.jpg" alt="Dhow" />
+      <strong>Dhow Cruise</strong>
+      <p>Sail as traders have for centuries — wind, salt, and horizon.</p>
+    </div>
+    <div class="item">
+      <img src="images/kayak.jpg" alt="Kayaking" />
+      <strong>Transparent Kayaking</strong>
+      <p>Glide over water so clear you see the seabed beneath you.</p>
+    </div>
+    <div class="item">
+      <img src="images/sunset.jpg" alt="Drone" />
+      <strong>Drone Photography</strong>
+      <p>Capture your retreat from above — a memory made visual.</p>
+    </div>
+    <div class="item">
+      <img src="images/turtle.jpg" alt="Turtles" />
+      <strong>Turtle Aquarium</strong>
+      <p>A gentle encounter with Zanzibar's marine conservation.</p>
+    </div>
+  </div>
+  <div class="page-num">09</div>
+</div>
+
+<!-- PAGE 10: INCLUSIONS & EXCLUSIONS -->
+<div class="page padding package-page">
+  <div class="label">Package Details</div>
+  <h2 style="font-size: 18pt; margin-bottom: 3mm;">Your Package at a Glance</h2>
+  <div class="gold-line"></div>
+  <div class="package-grid">
+    <div class="inclusions-col">
+      <h3>Included in Your Package</h3>
+      <div class="price-line">₦2,957,000 per person · Double Occupancy</div>
+      <ul class="diamond-list">
+        <li>Return Ethiopian Airlines economy class flights<br/><em>(Lagos – Addis Ababa – Zanzibar – Addis Ababa – Lagos)</em></li>
+        <li>Tanzania tourist visa</li>
+        <li>Comprehensive travel insurance</li>
+        <li>Private airport arrival and departure transfers</li>
+        <li>Luxury air-conditioned group transportation throughout</li>
+        <li>3 nights — Zanzibar City private villa accommodation</li>
+        <li>3 nights — Nungwi Garden Boutique Hotel accommodation</li>
+        <li>Complimentary full buffet breakfast at Nungwi Hotel <em>(3 mornings)</em></li>
+        <li>Guided Stone Town exploration tour</li>
+        <li>Full-day Nakupenda Sandbank excursion</li>
+        <li>Traditional dhow cruise</li>
+        <li>Snorkeling at Nakupenda Sandbank</li>
+        <li>Prison Island visit — guided</li>
+        <li>Included seafood lunch on Day 4</li>
+        <li>All entrance fees to included attractions</li>
+        <li>Transparent kayaking experience</li>
+        <li>Professional drone photography session</li>
+        <li>Nungwi Turtle Aquarium guided visit</li>
+        <li>Hotel-to-activity transfers in Nungwi</li>
+      </ul>
+    </div>
+    <div class="exclusions-col">
+      <h3>Not Included</h3>
+      <ul class="cross-list">
+        <li>Conference and Retreat Organization and Sessions</li>
+        <li>Personal expenses and sundry purchases</li>
+        <li>Tips and gratuities for guides and drivers</li>
+        <li>Shopping — Stone Town, markets and hotel boutiques</li>
+        <li>Lunches and dinners <em>(except the Day 4 included lunch)</em></li>
+        <li>Spa treatments at Nungwi Hotel <em>(own cost, payable on-site)</em></li>
+        <li>Optional water sports <em>(own cost)</em></li>
+        <li>Additional personal excursions not listed</li>
+        <li>Laundry services at the hotel</li>
+        <li>Room service charges</li>
+        <li>Telephone calls and data charges</li>
+        <li>Any costs arising from personal illness or travel disruption</li>
+        <li>Expenses incurred outside the stated itinerary</li>
+      </ul>
+    </div>
+  </div>
+  <div class="package-footnote">
+    Wakapadi recommends budgeting approximately USD 200–350 for personal spending, tips and optional experiences during your stay. US Dollars are widely accepted throughout Zanzibar.
+  </div>
+  <div class="page-num">10</div>
+</div>
+
+<!-- PAGE 11: WHO IS THIS FOR -->
+<div class="page full-bleed-text" style="background-image: url('images/aspirational.jpg');">
+  <div class="overlay">
+    <h2>This Retreat Was Made For You</h2>
+    <div class="if-block">
+      <strong>This retreat is for you if…</strong>
+      <p>…you have spent decades building something meaningful and you are ready to invest that same energy into yourself.</p>
+    </div>
+    <div class="if-block">
+      <strong>This retreat is for you if…</strong>
+      <p>…you believe that growth does not stop at 40, 50, or beyond — and that the most powerful women continue to learn, connect, and evolve.</p>
+    </div>
+    <div class="if-block">
+      <strong>This retreat is for you if…</strong>
+      <p>…you are drawn to experiences that are intimate, intentional, and beautifully curated — not mass-market, not rushed, not ordinary.</p>
+    </div>
+    <p style="margin-top: 8mm; font-family: 'Cormorant Garamond', serif; font-size: 12pt;">You need only be a woman who knows her worth — and is ready to honour it.</p>
+  </div>
+  <div class="page-num" style="color: var(--gold-light);">11</div>
+</div>
+
+<!-- PAGE 12: SECURING YOUR PLACE -->
+<div class="page padding">
+  <div class="label">Reserve Your Place</div>
+  <h2>Securing Your Place</h2>
+  <div class="gold-line"></div>
+  <div class="price-box">
+    <div class="amount">₦2,957,000</div>
+    <p style="margin: 0; color: var(--text-muted);">per person — double occupancy · 6 nights / 7 days</p>
+  </div>
+  <p>Six nights of curated luxury accommodation, return flights, comprehensive travel insurance, visa processing, and all listed Wakapadi-arranged experiences — with the dedicated care of our team from arrival to departure.</p>
+  <h3 style="margin-top: 6mm;">How to Reserve</h3>
+  <p>This retreat is limited to <strong>ten women only</strong>. Places are allocated on a first-confirmed, first-served basis. <strong>Full payment is required.</strong></p>
+  <ol class="steps">
+    <li>Express your interest via the Support Page or WhatsApp</li>
+    <li>Receive your booking confirmation and full payment instructions</li>
+    <li>Complete full payment by <strong>22 August 2026</strong> to secure your place</li>
+  </ol>
+  <p style="font-style: italic; font-family: 'Cormorant Garamond', serif; color: var(--ocean); font-size: 11pt; margin-top: 8mm;">Ten places. One extraordinary week. Is one of them yours?</p>
+  <div class="page-num">12</div>
+</div>
+
+<!-- PAGE 13: PAYMENT & TRAVEL -->
+<div class="page padding">
+  <div class="slim-banner" style="background-image: url('images/beachDusk.jpg');"></div>
+  <div class="label">Booking Your Place</div>
+  <h2 style="font-size: 18pt;">Payment Details &amp; Travel Essentials</h2>
+  <div class="gold-line"></div>
+  <div class="payment-panel">
+    <h3>Securing Your Place</h3>
+    <p>Early payment guarantees your place in this exclusive group.</p>
+    <div class="deadline">Payment Deadline: 22 August 2026</div>
+    <p><strong>Bank Transfer Details:</strong><br/>
+    Account Name: Wakapadi Lifestyle Limited<br/>
+    Account Number: 1797018962<br/>
+    Bank: Access Bank Plc<br/>
+    Payment Reference: <em>Your Full Name + ZNZ2027</em></p>
+    <p style="margin-top: 3mm;">All payments are acknowledged with an official receipt. Please read our Terms &amp; Conditions and Refund Policy in full before making payment.</p>
+    <p>Terms &amp; Conditions: mywakapadi.com/terms &nbsp;|&nbsp; Refund Policy: mywakapadi.com/refund</p>
+  </div>
+  <div class="travel-notes-grid">
+    <div>
+      <h4>Passport &amp; Visa</h4>
+      <p>Your Nigerian passport must be valid for at least six months beyond your travel date. Your tourist visa is included and coordinated by Wakapadi.</p>
+    </div>
+    <div>
+      <h4>Health</h4>
+      <p>Yellow Fever vaccination is required if travelling from a Yellow Fever country. Malaria prophylaxis is strongly recommended — consult your doctor four to six weeks before departure. Ensure routine vaccinations are current.</p>
+    </div>
+    <div>
+      <h4>Weather</h4>
+      <p>August falls in Zanzibar's dry season — the finest time to visit. Expect warm, sunny conditions between 28–32°C with cooling ocean breezes.</p>
+    </div>
+    <div>
+      <h4>Currency</h4>
+      <p>The Tanzanian Shilling is the local currency. USD is widely accepted. Inform your Nigerian bank of your travel dates before departure.</p>
+    </div>
+    <div>
+      <h4>What to Pack</h4>
+      <p>Light linens, cotton resort wear and swimwear. Smart casual for dinners. A modest wrap or shawl for Stone Town and cultural sites. Comfortable walking shoes. High-factor sunscreen — the Zanzibari sun is generous.</p>
+    </div>
+    <div>
+      <h4>Cultural Etiquette</h4>
+      <p>Zanzibar is a predominantly Muslim island. Please dress modestly in public areas away from the beach. Greet locals warmly — "Jambo!" is always welcome. Alcohol availability is limited in many areas; Wakapadi recommends embracing the island's culture fully and with respect.</p>
+    </div>
+    <div style="grid-column: 1 / -1;">
+      <h4>Travel Insurance</h4>
+      <p>Included in your package. Full policy details will be provided with your travel documentation.</p>
+    </div>
+  </div>
+  <div class="page-num">13</div>
+</div>
+
+<!-- PAGE 14: CLOSING -->
+<div class="page closing-page">
+  <div class="closing-hero" style="background-image: url('images/nigerian-women-group.jpg');"></div>
+  <div class="closing-body">
+    <div class="closing-statement">
+      Travel Together.<br/>Grow Together.<br/>Thrive Together.
+    </div>
+    <div class="closing-sub">Wakapadi — Curating Luxury Travel Experiences for Extraordinary Women</div>
+    <div class="closing-copy">
+      <p>This journey was designed for women who have already done a great deal and know, in the quiet part of themselves, that there is so much more ahead.</p>
+      <p>It was designed for the woman who has built something, who carries a great deal, who gives generously and who is beginning to understand — or has always known — that she must also receive.</p>
+      <p>Zanzibar will receive you. We will receive you.</p>
+      <p><strong style="color: var(--ocean);">Come.</strong></p>
+    </div>
+    <div class="contact-gold-box">
+      <p>🌐 mywakapadi.com</p>
+      <p>✉ wakapadi@icloud.com</p>
+      <p>📞 +234 806 853 3735</p>
+      <p>💬 WhatsApp: +44 788 118 3175</p>
+      <p>📸 instagram.com/wakapadi</p>
+      <p>💙 facebook.com/mywakapadi</p>
+    </div>
+    <div class="final-tagline">Wakapadi Lifestyle Limited · Curating Luxury Travel for Extraordinary Women</div>
+  </div>
+</div>
+
+</body>
+</html>

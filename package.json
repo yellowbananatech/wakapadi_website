@@ -55,11 +55,13 @@
             "@types/react": "^18.3.18",
             "@types/react-dom": "^18.3.5",
             "@vitejs/plugin-react-swc": "^3.10.2",
+            "puppeteer": "^25.2.1",
             "typescript": "^5.7.3",
             "vite": "^6.4.1"
       },
       "scripts": {
             "dev": "vite",
-            "build": "vite build"
+            "build": "vite build",
+            "brochure:pdf": "node brochure/generate-pdf.mjs"
       }
 }
