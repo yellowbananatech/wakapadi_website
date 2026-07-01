@@ -96,7 +96,7 @@ export function Navigation({ onNavigate, currentPage, isLoggedIn, isAdmin, onLog
                   </button>
                   
                   {activeMenu === 'services' && (
-                    <div className="absolute top-full left-0 mt-2 w-96 animate-slide-down">
+                    <div className="absolute top-full left-0 pt-2 w-96 animate-slide-down">
                       <div className="glass-strong rounded-2xl p-6 shadow-xl">
                         <div className="space-y-1">
                           {services.map((service) => (
@@ -135,7 +135,7 @@ export function Navigation({ onNavigate, currentPage, isLoggedIn, isAdmin, onLog
                   </button>
                   
                   {activeMenu === 'travel' && (
-                    <div className="absolute top-full left-0 mt-2 w-80 animate-slide-down">
+                    <div className="absolute top-full left-0 pt-2 w-80 animate-slide-down">
                       <div className="glass-strong rounded-2xl p-6 shadow-xl">
                         <div className="space-y-1">
                           {travel.map((item) => (
