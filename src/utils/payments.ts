@@ -69,6 +69,10 @@ export async function initializePackagePayment(
   currencyCode: string,
   metadata: PackagePaymentMetadata
 ): Promise<string> {
+  if (currencyCode !== 'NGN' && currencyCode !== 'USD') {
+    throw new Error(`Unsupported payment currency: ${currencyCode}`);
+  }
+
   const res = await fetch(getPaymentInitPath(), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

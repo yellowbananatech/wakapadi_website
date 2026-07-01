@@ -6,58 +6,81 @@ export interface CurrencyInfo {
   name: string;
 }
 
-// Currency mappings for different countries
-const CURRENCY_MAP: Record<string, CurrencyInfo> = {
-  NG: { code: 'NGN', symbol: '₦', name: 'Nigerian Naira' },
-  KE: { code: 'KES', symbol: 'KSh', name: 'Kenyan Shilling' },
-  GH: { code: 'GHS', symbol: '₵', name: 'Ghanaian Cedi' },
-  ZA: { code: 'ZAR', symbol: 'R', name: 'South African Rand' },
-  US: { code: 'USD', symbol: '$', name: 'US Dollar' },
-  GB: { code: 'GBP', symbol: '£', name: 'British Pound' },
-  CA: { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar' },
-  AU: { code: 'AUD', symbol: 'A$', name: 'Australian Dollar' },
-  // Default to USD for other countries
+export const NGN: CurrencyInfo = {
+  code: 'NGN',
+  symbol: '₦',
+  name: 'Nigerian Naira',
 };
 
-// Exchange rates (base: USD) - These should be updated regularly or fetched from an API
-const EXCHANGE_RATES: Record<string, number> = {
-  NGN: 1500, // 1 USD = 1500 NGN (approximate)
-  KES: 130,  // 1 USD = 130 KES (approximate)
-  GHS: 12,   // 1 USD = 12 GHS (approximate)
-  ZAR: 18,   // 1 USD = 18 ZAR (approximate)
-  USD: 1,
-  GBP: 0.79, // 1 USD = 0.79 GBP (approximate)
-  CAD: 1.35, // 1 USD = 1.35 CAD (approximate)
-  AUD: 1.52, // 1 USD = 1.52 AUD (approximate)
+export const USD: CurrencyInfo = {
+  code: 'USD',
+  symbol: '$',
+  name: 'US Dollar',
 };
 
-// Package prices in USD (base currency)
-export interface PackagePrice {
-  usd: number;
+const USD_TO_NGN = 1500;
+const CURRENCY_OVERRIDE_KEY = 'wakapadi_currency';
+
+function currencyFromCode(code: string): CurrencyInfo | null {
+  if (code === 'NGN') return NGN;
+  if (code === 'USD') return USD;
+  return null;
 }
 
-// Detect user's currency based on browser locale or IP geolocation
-export function detectCurrency(): CurrencyInfo {
-  // Try to get from browser locale
+function readCurrencyOverride(): CurrencyInfo | null {
   try {
-    const locale = navigator.language || 'en-US';
-    const countryCode = locale.split('-')[1]?.toUpperCase();
-    
-    if (countryCode && CURRENCY_MAP[countryCode]) {
-      return CURRENCY_MAP[countryCode];
+    const params = new URLSearchParams(window.location.search);
+    const fromUrl = params.get('currency')?.toUpperCase();
+    if (fromUrl) {
+      const currency = currencyFromCode(fromUrl);
+      if (currency) {
+        sessionStorage.setItem(CURRENCY_OVERRIDE_KEY, currency.code);
+        return currency;
+      }
     }
-  } catch (e) {
-    console.warn('Could not detect currency from locale:', e);
+    const stored = sessionStorage.getItem(CURRENCY_OVERRIDE_KEY);
+    if (stored) return currencyFromCode(stored);
+  } catch {
+    // sessionStorage or URL may be unavailable
   }
-  
-  // Default to USD
-  return CURRENCY_MAP['US'];
+  return null;
 }
 
-// Convert USD amount to target currency
-export function convertCurrency(usdAmount: number, targetCurrency: string): number {
-  const rate = EXCHANGE_RATES[targetCurrency] || 1;
-  return usdAmount * rate;
+function hasNigeriaLocaleHints(): boolean {
+  try {
+    if (Intl.DateTimeFormat().resolvedOptions().timeZone === 'Africa/Lagos') {
+      return true;
+    }
+    const languages = navigator.languages?.length
+      ? navigator.languages
+      : [navigator.language];
+    return languages.some((locale) => locale.split('-')[1]?.toUpperCase() === 'NG');
+  } catch {
+    return false;
+  }
+}
+
+async function fetchCountryFromGeo(): Promise<string | null> {
+  try {
+    const res = await fetch('/.netlify/functions/geo-country');
+    if (!res.ok) return null;
+    const data = await res.json();
+    return typeof data?.country === 'string' ? data.country.toUpperCase() : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function detectCurrencyAsync(): Promise<CurrencyInfo> {
+  const override = readCurrencyOverride();
+  if (override) return override;
+
+  if (hasNigeriaLocaleHints()) return NGN;
+
+  const country = await fetchCountryFromGeo();
+  if (country === 'NG') return NGN;
+
+  return USD;
 }
 
 // Format price with currency symbol
@@ -66,7 +89,7 @@ export function formatPrice(amount: number, currency: CurrencyInfo): string {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount);
-  
+
   return `${currency.symbol}${formatted}`;
 }
 
@@ -78,32 +101,21 @@ export function getPackagePrice(
   amount: number;
   formatted: string;
 } {
-  if (currency.code === 'NGN' && pkg.priceNgn != null) {
+  if (currency.code === 'NGN') {
+    const amount = pkg.priceNgn ?? Math.round(pkg.priceUsd * USD_TO_NGN);
     return {
-      amount: pkg.priceNgn,
-      formatted: formatPrice(pkg.priceNgn, currency),
+      amount,
+      formatted: formatPrice(amount, currency),
     };
   }
-  const converted = convertCurrency(pkg.priceUsd, currency.code);
+
   return {
-    amount: converted,
-    formatted: formatPrice(converted, currency),
+    amount: pkg.priceUsd,
+    formatted: formatPrice(pkg.priceUsd, currency),
   };
 }
 
 // Convert to Paystack amount (kobo for NGN, cents for USD)
-// Paystack primarily uses NGN (kobo) and USD (cents)
 export function toPaystackAmount(amount: number, currencyCode: string): number {
-  if (currencyCode === 'NGN') {
-    // Amount is already in Naira, convert to kobo (multiply by 100)
-    return Math.round(amount * 100);
-  } else if (currencyCode === 'USD') {
-    // Amount is already in USD, convert to cents (multiply by 100)
-    return Math.round(amount * 100);
-  } else {
-    // For other currencies, convert to USD first, then to cents
-    // This assumes the amount is in the local currency
-    const usdAmount = amount / EXCHANGE_RATES[currencyCode];
-    return Math.round(usdAmount * 100);
-  }
+  return Math.round(amount * 100);
 }

@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { PACKAGES_LIST } from '../data/packages';
-import { detectCurrency, getPackagePrice, type CurrencyInfo } from '../utils/currency';
+import { detectCurrencyAsync, getPackagePrice, type CurrencyInfo } from '../utils/currency';
 
 interface HomePageProps {
   onNavigate: (page: string, id?: string) => void;
@@ -15,7 +15,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
   const [currency, setCurrency] = useState<CurrencyInfo | null>(null);
 
   useEffect(() => {
-    setCurrency(detectCurrency());
+    detectCurrencyAsync().then(setCurrency);
   }, []);
 
   const featuredPackages = PACKAGES_LIST.slice(0, FEATURED_PACKAGES_COUNT);

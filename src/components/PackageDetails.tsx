@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Button } from './ui/button';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import { detectCurrency, getPackagePrice, type CurrencyInfo } from '../utils/currency';
+import { detectCurrencyAsync, getPackagePrice, type CurrencyInfo } from '../utils/currency';
 import { initializePackagePayment } from '../utils/payments';
 import { supabase } from '../lib/supabaseClient';
 import { PACKAGES_BY_ID } from '../data/packages';
@@ -21,7 +21,7 @@ export function PackageDetails({ packageId, onNavigate }: PackageDetailsProps) {
   const pkg = PACKAGES_BY_ID[packageId];
 
   useEffect(() => {
-    setCurrency(detectCurrency());
+    detectCurrencyAsync().then(setCurrency);
     
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user?.email) {
