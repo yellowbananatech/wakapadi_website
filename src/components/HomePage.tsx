@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
+import { WHATSAPP_URL } from '../config/cta-flows';
 import { Button } from './ui/button';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { PACKAGES_LIST } from '../data/packages';
@@ -97,7 +98,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
             <div className="flex flex-col sm:flex-row items-start gap-4 mb-16">
               <Button 
                 size="lg"
-                onClick={() => window.open('https://selar.com/wakapadixveev', '_blank')}
+                onClick={() => window.open(WHATSAPP_URL, '_blank', 'noopener,noreferrer')}
                 className="text-white rounded-xl px-8 h-14 text-base"
                 style={{ backgroundColor: '#2894ca' }}
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2278a8'}
@@ -283,7 +284,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button
                 size="lg"
-                onClick={() => window.open('https://selar.com/wakapadixveev', '_blank')}
+                onClick={() => window.open(WHATSAPP_URL, '_blank', 'noopener,noreferrer')}
                 className="text-white rounded-xl px-8 h-14 text-base"
                 style={{ backgroundColor: '#2894ca' }}
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2278a8'}

@@ -54,8 +54,17 @@ exports.handler = async (event) => {
   }
 
   const txRef = createTxRef();
-  const redirectUrl = getPaymentSuccessUrl();
-  const packageTitle = metadata?.packageTitle || 'Wakapadi travel package';
+  const serviceType = metadata?.serviceType;
+  const redirectUrl = serviceType
+    ? `${getPaymentSuccessUrl()}?flow=${encodeURIComponent(serviceType)}`
+    : getPaymentSuccessUrl();
+  const packageTitle =
+    metadata?.packageTitle ||
+    (serviceType === 'custom-package'
+      ? 'Custom Package Consultation'
+      : serviceType === 'get-assessed'
+        ? 'Eligibility Assessment'
+        : 'Wakapadi travel package');
 
   const res = await fetch(FLUTTERWAVE_API, {
     method: 'POST',

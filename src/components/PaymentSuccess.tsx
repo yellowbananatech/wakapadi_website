@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
+import { getBookingUrlForFlow } from '../config/cta-flows';
 import { getPaymentProvider } from '../utils/payments';
 
 interface PaymentSuccessProps {
@@ -8,14 +9,22 @@ interface PaymentSuccessProps {
 
 type VerificationState = 'idle' | 'checking' | 'verified' | 'failed' | 'cancelled';
 
+const REDIRECT_DELAY_MS = 3000;
+
 export function PaymentSuccess({ onNavigate }: PaymentSuccessProps) {
   const [reference, setReference] = useState('');
   const [transactionId, setTransactionId] = useState('');
   const [verificationState, setVerificationState] = useState<VerificationState>('idle');
   const [verificationMessage, setVerificationMessage] = useState('');
+  const [flow, setFlow] = useState<string | null>(null);
+  const [redirectCountdown, setRedirectCountdown] = useState<number | null>(null);
+
+  const bookingUrl = getBookingUrlForFlow(flow);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    setFlow(params.get('flow'));
+
     const provider = getPaymentProvider();
 
     if (provider === 'paystack') {
@@ -67,8 +76,36 @@ export function PaymentSuccess({ onNavigate }: PaymentSuccessProps) {
       });
   }, []);
 
+  useEffect(() => {
+    if (verificationState !== 'verified' || !bookingUrl) return;
+
+    setRedirectCountdown(Math.ceil(REDIRECT_DELAY_MS / 1000));
+
+    const countdownInterval = window.setInterval(() => {
+      setRedirectCountdown((prev) => {
+        if (prev === null || prev <= 1) return prev;
+        return prev - 1;
+      });
+    }, 1000);
+
+    const redirectTimeout = window.setTimeout(() => {
+      window.location.href = bookingUrl;
+    }, REDIRECT_DELAY_MS);
+
+    return () => {
+      window.clearInterval(countdownInterval);
+      window.clearTimeout(redirectTimeout);
+    };
+  }, [verificationState, bookingUrl]);
+
   const isSuccess = verificationState === 'verified';
   const isChecking = verificationState === 'checking';
+
+  const successMessage = bookingUrl
+    ? redirectCountdown !== null && redirectCountdown > 0
+      ? `Thank you! Your payment has been received. Redirecting to book your appointment in ${redirectCountdown} seconds...`
+      : 'Thank you! Your payment has been received. Redirecting to book your appointment...'
+    : 'Thank you! Your payment has been received.';
 
   return (
     <div className="min-h-screen pt-32 bg-white pb-20">
@@ -78,7 +115,7 @@ export function PaymentSuccess({ onNavigate }: PaymentSuccessProps) {
         </h1>
         <p className="text-slate-600 mb-6">
           {isSuccess
-            ? 'Thank you! Your payment has been received.'
+            ? successMessage
             : isChecking
               ? 'Please wait while we confirm your payment with Flutterwave.'
               : verificationMessage || 'There was a problem confirming your payment.'}
@@ -94,19 +131,42 @@ export function PaymentSuccess({ onNavigate }: PaymentSuccessProps) {
           </div>
         )}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          {isSuccess && bookingUrl && (
+            <Button
+              onClick={() => {
+                window.location.href = bookingUrl;
+              }}
+              className="bg-primary hover:bg-primary/90 text-white rounded-xl px-6"
+            >
+              Book Appointment Now
+            </Button>
+          )}
           <Button
             onClick={() => onNavigate('home')}
-            className="bg-primary hover:bg-primary/90 text-white rounded-xl px-6"
+            variant={isSuccess && bookingUrl ? 'outline' : 'default'}
+            className={
+              isSuccess && bookingUrl
+                ? 'rounded-xl px-6'
+                : 'bg-primary hover:bg-primary/90 text-white rounded-xl px-6'
+            }
           >
             Back to Home
           </Button>
           {!isSuccess && (
             <Button
-              onClick={() => onNavigate('packages')}
+              onClick={() =>
+                onNavigate(
+                  flow === 'custom-package'
+                    ? 'request-custom-package'
+                    : flow === 'get-assessed'
+                      ? 'get-assessed'
+                      : 'packages'
+                )
+              }
               variant="outline"
               className="rounded-xl px-6"
             >
-              Back to Packages
+              Try Again
             </Button>
           )}
         </div>

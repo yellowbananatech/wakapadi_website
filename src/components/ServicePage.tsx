@@ -44,7 +44,7 @@ export function ServicePage({ service, onNavigate }: ServicePageProps) {
             </p>
             <Button
               size="lg"
-              onClick={() => window.open('https://selar.com/wakapadixveev', '_blank')}
+              onClick={() => onNavigate('get-assessed')}
               className="text-white rounded-xl px-8 h-14 text-base"
               style={{ backgroundColor: '#2894ca' }}
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2278a8'}
@@ -172,7 +172,7 @@ export function ServicePage({ service, onNavigate }: ServicePageProps) {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button
                 size="lg"
-                onClick={() => window.open('https://selar.com/wakapadixveev', '_blank')}
+                onClick={() => onNavigate('get-assessed')}
                 className="text-white rounded-xl px-8 h-14 text-base"
                 style={{ backgroundColor: '#2894ca' }}
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2278a8'}

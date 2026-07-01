@@ -12,6 +12,8 @@ import { ClientDashboard } from './components/ClientDashboard';
 import { AdminDashboard } from './components/AdminDashboard';
 import { LoginPage } from './components/LoginPage';
 import { PaymentSuccess } from './components/PaymentSuccess';
+import { CustomPackageRequestPage } from './components/CustomPackageRequestPage';
+import { GetAssessedPage } from './components/GetAssessedPage';
 import { TermsPage } from './components/TermsPage';
 import { ContactPage } from './components/ContactPage';
 import { supabase } from './lib/supabaseClient';
@@ -39,6 +41,8 @@ const pageToPath: Record<string, string | ((id?: string) => string)> = {
   admin: '/admin',
   login: '/login',
   contact: '/contact',
+  'request-custom-package': '/request-custom-package',
+  'get-assessed': '/get-assessed',
   terms: '/terms',
   privacy: '/privacy',
   'acceptable-use': '/acceptable-use',
@@ -89,6 +93,8 @@ function parseLocation(pathname: string): ParsedLocation {
   if (path === '/login') return { page: 'login' };
 
   if (path === '/contact') return { page: 'contact' };
+  if (path === '/request-custom-package') return { page: 'request-custom-package' };
+  if (path === '/get-assessed') return { page: 'get-assessed' };
 
   if (path === '/terms') return { page: 'terms' };
   if (path === '/privacy') return { page: 'privacy' };
@@ -631,6 +637,12 @@ export default function App() {
       
       case 'contact':
         return <ContactPage onNavigate={handleNavigation} />;
+
+      case 'request-custom-package':
+        return <CustomPackageRequestPage onNavigate={handleNavigation} />;
+
+      case 'get-assessed':
+        return <GetAssessedPage onNavigate={handleNavigation} />;
       
       case 'terms':
       case 'privacy':

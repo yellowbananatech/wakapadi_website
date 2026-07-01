@@ -194,7 +194,7 @@ export function PackagesPage({ onNavigate }: PackagesPageProps) {
             </p>
             <Button
               size="lg"
-              onClick={() => onNavigate('contact')}
+              onClick={() => onNavigate('request-custom-package')}
               className="bg-primary hover:bg-primary/90 text-white rounded-xl px-8 h-14"
             >
               Request Custom Package

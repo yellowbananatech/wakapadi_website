@@ -1,3 +1,4 @@
+import { CTA_FLOWS, type ServiceFlowType } from '../config/cta-flows';
 import { toPaystackAmount } from './currency';
 
 export type PaymentProvider = 'flutterwave' | 'paystack';
@@ -19,6 +20,32 @@ export interface PackagePaymentMetadata {
   packageLocation: string;
   currency: string;
   amountUsd: number;
+}
+
+export interface CustomPackageFormData {
+  name: string;
+  email: string;
+  whatsapp: string;
+  destination: string;
+  adults: number;
+  children: number;
+  infants: number;
+}
+
+export interface GetAssessedFormData {
+  name: string;
+  email: string;
+  whatsapp: string;
+}
+
+export interface ServicePaymentMetadata {
+  serviceType: ServiceFlowType;
+  customerName: string;
+  customerWhatsapp: string;
+  destination?: string;
+  adults?: number;
+  children?: number;
+  infants?: number;
 }
 
 export function buildPaymentInitBody(
@@ -77,6 +104,77 @@ export async function initializePackagePayment(
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(buildPaymentInitBody(email, amount, currencyCode, metadata)),
+  });
+
+  const data = await res.json().catch(() => ({}));
+
+  if (!res.ok || !isPaymentInitSuccess(data)) {
+    throw new Error(data?.message ?? 'Failed to initialize payment');
+  }
+
+  const redirectUrl = getPaymentRedirectUrl(data);
+  if (!redirectUrl) {
+    throw new Error('Payment gateway did not return a checkout link');
+  }
+
+  return redirectUrl;
+}
+
+function buildServicePaymentMetadata(
+  serviceType: ServiceFlowType,
+  formData: CustomPackageFormData | GetAssessedFormData
+): ServicePaymentMetadata {
+  const base: ServicePaymentMetadata = {
+    serviceType,
+    customerName: formData.name.trim(),
+    customerWhatsapp: formData.whatsapp.trim(),
+  };
+
+  if (serviceType === 'custom-package') {
+    const customData = formData as CustomPackageFormData;
+    return {
+      ...base,
+      destination: customData.destination.trim(),
+      adults: customData.adults,
+      children: customData.children,
+      infants: customData.infants,
+    };
+  }
+
+  return base;
+}
+
+export async function initializeServicePayment(
+  serviceType: ServiceFlowType,
+  formData: CustomPackageFormData | GetAssessedFormData
+): Promise<string> {
+  const flow = CTA_FLOWS[serviceType];
+  const metadata = buildServicePaymentMetadata(serviceType, formData);
+  const email = formData.email.trim();
+  const provider = getPaymentProvider();
+
+  const body =
+    provider === 'paystack'
+      ? {
+          email,
+          amount: toPaystackAmount(flow.amount, flow.currency),
+          metadata,
+          customerName: formData.name.trim(),
+          customerPhone: formData.whatsapp.trim(),
+        }
+      : {
+          email,
+          amount: flow.amount,
+          currency: flow.currency,
+          metadata,
+          customerName: formData.name.trim(),
+          customerPhone: formData.whatsapp.trim(),
+        };
+
+  const res = await fetch(getPaymentInitPath(), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
   });
 
   const data = await res.json().catch(() => ({}));

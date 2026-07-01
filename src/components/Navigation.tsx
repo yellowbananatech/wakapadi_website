@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Menu, X, Phone } from 'lucide-react';
 import { Button } from './ui/button';
+import { WHATSAPP_URL } from '../config/cta-flows';
 import logo from 'figma:asset/b406f45c0ec8def20c8b4f10c893165a44754fe7.png';
 
 interface NavigationProps {
@@ -208,7 +209,7 @@ export function Navigation({ onNavigate, currentPage, isLoggedIn, isAdmin, onLog
 
               <div className="hidden lg:block">
                 <Button
-                  onClick={() => window.open('https://selar.com/wakapadixveev', '_blank')}
+                  onClick={() => window.open(WHATSAPP_URL, '_blank', 'noopener,noreferrer')}
                   className="text-white rounded-xl px-6"
                   style={{ backgroundColor: '#2894ca' }}
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2278a8'}
@@ -336,7 +337,7 @@ export function Navigation({ onNavigate, currentPage, isLoggedIn, isAdmin, onLog
 
               <Button
                 onClick={() => {
-                  window.open('https://selar.com/wakapadixveev', '_blank');
+                  window.open(WHATSAPP_URL, '_blank', 'noopener,noreferrer');
                   setMobileMenuOpen(false);
                 }}
                 className="w-full text-white rounded-xl mt-4"

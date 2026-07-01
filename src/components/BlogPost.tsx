@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'motion/react';
+import { WHATSAPP_URL } from '../config/cta-flows';
 import { Button } from './ui/button';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { CommentsSection } from './CommentsSection';
@@ -180,7 +181,7 @@ export function BlogPost({ onNavigate, postId }: BlogPostProps) {
             </p>
             <Button
               size="lg"
-              onClick={() => window.open('https://selar.com/wakapadixveev', '_blank')}
+              onClick={() => window.open(WHATSAPP_URL, '_blank', 'noopener,noreferrer')}
               className="text-white rounded-xl px-8 h-14"
               style={{ backgroundColor: '#2894ca' }}
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2278a8'}

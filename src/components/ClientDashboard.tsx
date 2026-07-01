@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'motion/react';
+import { WHATSAPP_URL } from '../config/cta-flows';
 import { Button } from './ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Progress } from './ui/progress';
@@ -289,7 +290,7 @@ export function ClientDashboard({ onNavigate }: ClientDashboardProps) {
                 </button>
 
                 <button 
-                  onClick={() => window.open('https://selar.com/wakapadixveev', '_blank')}
+                  onClick={() => window.open(WHATSAPP_URL, '_blank', 'noopener,noreferrer')}
                   className="glass rounded-xl p-6 text-left hover:shadow-lg transition-all"
                 >
                   <div className="font-semibold text-slate-900 mb-1">Start Your Journey</div>
