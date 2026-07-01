@@ -2143,6 +2143,10 @@ html {
   animation: .5s ease-out fadeIn;
 }
 
+.animate-menu-fade {
+  animation: .15s ease-out fadeIn;
+}
+
 .animate-slide-down {
   animation: .3s ease-out slideDown;
 }

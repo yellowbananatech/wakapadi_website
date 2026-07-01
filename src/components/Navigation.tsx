@@ -96,8 +96,8 @@ export function Navigation({ onNavigate, currentPage, isLoggedIn, isAdmin, onLog
                   </button>
                   
                   {activeMenu === 'services' && (
-                    <div className="absolute top-full left-0 pt-2 w-96 animate-slide-down">
-                      <div className="glass-strong rounded-2xl p-6 shadow-xl">
+                    <div className="absolute top-full left-0 pt-2 w-96 z-50">
+                      <div className="glass-strong rounded-2xl p-6 shadow-xl animate-menu-fade">
                         <div className="space-y-1">
                           {services.map((service) => (
                             <button
@@ -135,8 +135,8 @@ export function Navigation({ onNavigate, currentPage, isLoggedIn, isAdmin, onLog
                   </button>
                   
                   {activeMenu === 'travel' && (
-                    <div className="absolute top-full left-0 pt-2 w-80 animate-slide-down">
-                      <div className="glass-strong rounded-2xl p-6 shadow-xl">
+                    <div className="absolute top-full left-0 pt-2 w-80 z-50">
+                      <div className="glass-strong rounded-2xl p-6 shadow-xl animate-menu-fade">
                         <div className="space-y-1">
                           {travel.map((item) => (
                             <button
