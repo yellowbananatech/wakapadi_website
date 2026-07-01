@@ -52,7 +52,7 @@ export function PackagesPage({ onNavigate }: PackagesPageProps) {
         }
       }
 
-      const priceInfo = getPackagePrice(pkg.priceUsd, currency);
+      const priceInfo = getPackagePrice(pkg, currency);
       const redirectUrl = await initializePackagePayment(
         email,
         priceInfo.amount,
@@ -74,7 +74,7 @@ export function PackagesPage({ onNavigate }: PackagesPageProps) {
   };
 
   const PackageCard = ({ pkg, index }: { pkg: Package; index: number }) => {
-    const priceInfo = currency ? getPackagePrice(pkg.priceUsd, currency) : null;
+    const priceInfo = currency ? getPackagePrice(pkg, currency) : null;
     const isLoading = payLoading === pkg.id;
 
     return (

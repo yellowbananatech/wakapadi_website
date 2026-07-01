@@ -3,6 +3,7 @@ export interface Package {
   title: string;
   location: string;
   priceUsd: number;
+  priceNgn?: number;
   duration: string;
   includes: string[];
   activities: string[];
@@ -16,7 +17,8 @@ export const PACKAGES_LIST: Package[] = [
     id: 'mombasa-7',
     title: '7 Nights in Mombasa',
     location: 'Mombasa, Kenya',
-    priceUsd: 2500,
+    priceUsd: 1337,
+    priceNgn: 2004800,
     duration: '7 nights',
     includes: [
       'Luxury beachfront resort accommodation',
@@ -27,7 +29,6 @@ export const PACKAGES_LIST: Package[] = [
     ],
     activities: [
       'Snorkeling and diving excursions',
-      'Sunset dhow cruise',
       'Old Town cultural tour',
       'Haller Park wildlife experience',
       'Beach volleyball and water sports',
@@ -39,10 +40,50 @@ export const PACKAGES_LIST: Package[] = [
     highlights: ['Beachfront luxury resort', 'Water sports included', 'Cultural immersion']
   },
   {
+    id: 'zanzibar-6',
+    title: '6 Nights in Zanzibar',
+    location: 'Zanzibar City & Nungwi, Tanzania',
+    priceUsd: 1267,
+    priceNgn: 1900000,
+    duration: '6 nights / 7 days',
+    includes: [
+      'Private airport arrival and departure transfers',
+      'Luxury air-conditioned transportation throughout',
+      '3 nights — Zanzibar City private villa (single occupancy)',
+      '3 nights — Nungwi Garden Boutique Hotel (single occupancy)',
+      'Complimentary buffet breakfast at Nungwi Hotel (3 mornings)',
+      'Guided Stone Town exploration tour',
+      'Full-day Nakupenda Sandbank excursion',
+      'Traditional dhow cruise and snorkeling',
+      'Prison Island guided visit',
+      'Included seafood lunch on Day 4',
+      'Transparent kayaking experience',
+      'Professional drone photography session',
+      'Nungwi Turtle Aquarium guided visit',
+      'All entrance fees to included attractions'
+    ],
+    activities: [
+      'Stone Town heritage walk',
+      'Nakupenda Sandbank excursion',
+      'Traditional dhow cruise',
+      'Snorkeling at Nakupenda Sandbank',
+      'Prison Island visit',
+      'Transparent kayaking',
+      'Professional drone photography',
+      'Nungwi Turtle Aquarium visit',
+      'Leisure beach time in Nungwi'
+    ],
+    image: '/packages/zanzibar-6.jpg',
+    description:
+      "Discover Zanzibar's UNESCO Stone Town, turquoise sandbanks, and Nungwi's northern coast. A 6-night, 7-day single-occupancy package with villa and boutique hotel stays, curated excursions, and island transfers. Flights, visa, and travel insurance are arranged separately.",
+    highlights: ['Single occupancy', 'Stone Town & Nungwi', 'Land package — flights not included']
+  },
+  {
     id: 'rwanda-7',
     title: '7 Nights in Rwanda',
     location: 'Kigali & Volcanoes National Park, Rwanda',
-    priceUsd: 3200,
+    priceUsd: 2548,
+    priceNgn: 3822000,
     duration: '7 nights',
     includes: [
       '5-star hotel in Kigali',

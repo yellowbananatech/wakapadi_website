@@ -172,7 +172,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
             {featuredPackages.map((pkg, index) => {
-              const priceInfo = currency ? getPackagePrice(pkg.priceUsd, currency) : null;
+              const priceInfo = currency ? getPackagePrice(pkg, currency) : null;
               return (
                 <motion.div
                   key={pkg.id}

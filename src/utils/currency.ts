@@ -71,11 +71,20 @@ export function formatPrice(amount: number, currency: CurrencyInfo): string {
 }
 
 // Get package price in user's currency
-export function getPackagePrice(usdPrice: number, currency: CurrencyInfo): {
+export function getPackagePrice(
+  pkg: { priceUsd: number; priceNgn?: number },
+  currency: CurrencyInfo
+): {
   amount: number;
   formatted: string;
 } {
-  const converted = convertCurrency(usdPrice, currency.code);
+  if (currency.code === 'NGN' && pkg.priceNgn != null) {
+    return {
+      amount: pkg.priceNgn,
+      formatted: formatPrice(pkg.priceNgn, currency),
+    };
+  }
+  const converted = convertCurrency(pkg.priceUsd, currency.code);
   return {
     amount: converted,
     formatted: formatPrice(converted, currency),

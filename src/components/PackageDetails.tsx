@@ -43,7 +43,7 @@ export function PackageDetails({ packageId, onNavigate }: PackageDetailsProps) {
     );
   }
 
-  const priceInfo = currency ? getPackagePrice(pkg.priceUsd, currency) : null;
+  const priceInfo = currency ? getPackagePrice(pkg, currency) : null;
 
   const handlePayment = async () => {
     if (!currency) return;
