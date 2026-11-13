@@ -14,6 +14,72 @@ export interface Package {
 
 export const PACKAGES_LIST: Package[] = [
   {
+    id: 'morocco-tour',
+    title: 'Morocco Tour Package',
+    location: 'Marrakech, Essaouira & Fes, Morocco',
+    priceUsd: 1950,
+    priceNgn: 2730000,
+    duration: '8 nights / 9 days',
+    includes: [
+      'Airport shuttle and transfers',
+      '3 nights in Marrakech (culture, food, wellness)',
+      '2 nights in Essaouira (coastal escape and relaxation)',
+      '3 nights in Fes (history and heritage)',
+      'Local transportation',
+      'Traditional riad stays throughout',
+      'Street food tours and local culinary experiences',
+      'Pottery and artisan workshop',
+      'Hammam spa experience',
+      'Guided Medina tour in Fes'
+    ],
+    activities: [
+      'Explore the Medina in Marrakech',
+      'Relax in a traditional riad setting',
+      'Coastal discovery in Essaouira',
+      'Street food tasting experiences',
+      'Hands-on pottery and artisan workshop',
+      'Traditional Hammam spa treatment',
+      'Guided heritage walk in Fes',
+      'Local culture and market exploration'
+    ],
+    image: '/packages/morocco-tour.png',
+    description: 'Experience Morocco through a curated journey across Marrakech, Essaouira, and Fes with culture, culinary discovery, relaxation, and heritage in one package.',
+    highlights: ['Marrakech, Essaouira and Fes', 'Traditional riad stays', 'Hammam and Medina experiences']
+  },
+  {
+    id: 'turkey-tour',
+    title: 'Turkey Tour Package',
+    location: 'Istanbul, Cappadocia & Antalya, Turkey',
+    priceUsd: 2100,
+    priceNgn: 2940000,
+    duration: '7 nights / 8 days',
+    includes: [
+      'Airport shuttle and transfers',
+      '2 nights in Istanbul (history, food, Bosphorus)',
+      '2 nights in Cappadocia (cave hotel and balloon experience)',
+      '3 nights in Antalya (yoga and relaxation)',
+      'Local transportation and domestic flights',
+      '4/5-star stays throughout',
+      'Street food tours and local culinary experiences',
+      'Pottery and artisan workshop',
+      'Hammam spa experience',
+      'Hot air balloon and yoga activities'
+    ],
+    activities: [
+      'Historic city exploration in Istanbul',
+      'Bosphorus and culinary experiences',
+      'Cappadocia cave stay and balloon adventure',
+      'Pottery and local artisan sessions',
+      'Wellness-focused yoga in Antalya',
+      'Hammam spa experience',
+      'Mediterranean relaxation in Antalya',
+      'Culture and landscape photography moments'
+    ],
+    image: '/packages/turkey-tour.png',
+    description: 'Discover Turkey with a balanced route through Istanbul, Cappadocia, and Antalya, combining iconic sights, local culture, scenic adventure, and wellness experiences.',
+    highlights: ['Istanbul, Cappadocia and Antalya', 'Hot air balloon experience', '4/5-star comfort and wellness']
+  },
+  {
     id: 'mombasa-7',
     title: '7 Nights in Mombasa',
     location: 'Mombasa, Kenya',
