@@ -1,5 +1,7 @@
 // Currency detection and formatting utility
 
+import { functionUrl } from './api';
+
 export interface CurrencyInfo {
   code: string;
   symbol: string;
@@ -62,7 +64,7 @@ function hasNigeriaLocaleHints(): boolean {
 
 async function fetchCountryFromGeo(): Promise<string | null> {
   try {
-    const res = await fetch('/.netlify/functions/geo-country');
+    const res = await fetch(functionUrl('geo-country'));
     if (!res.ok) return null;
     const data = await res.json();
     return typeof data?.country === 'string' ? data.country.toUpperCase() : null;

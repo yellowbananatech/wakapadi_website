@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { Button } from './ui/button';
 import { CloudflareTurnstile, isTurnstileEnabled } from './CloudflareTurnstile';
+import { functionUrl } from '../utils/api';
 
 interface ContactPageProps {
   onNavigate: (page: string) => void;
@@ -90,7 +91,7 @@ export function ContactPage(_props: ContactPageProps) {
     setErrorMessage('');
 
     try {
-      const res = await fetch('/.netlify/functions/contact-submit', {
+      const res = await fetch(functionUrl('contact-submit'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -1,5 +1,6 @@
 import { CTA_FLOWS, type ServiceFlowType } from '../config/cta-flows';
 import { toPaystackAmount } from './currency';
+import { functionUrl } from './api';
 
 export type PaymentProvider = 'flutterwave' | 'paystack';
 
@@ -10,8 +11,8 @@ export function getPaymentProvider(): PaymentProvider {
 
 export function getPaymentInitPath(): string {
   return getPaymentProvider() === 'paystack'
-    ? '/.netlify/functions/paystack-init'
-    : '/.netlify/functions/flutterwave-init';
+    ? functionUrl('paystack-init')
+    : functionUrl('flutterwave-init');
 }
 
 export interface PackagePaymentMetadata {

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { getBookingUrlForFlow } from '../config/cta-flows';
 import { getPaymentProvider } from '../utils/payments';
+import { functionUrl } from '../utils/api';
 
 interface PaymentSuccessProps {
   onNavigate: (page: string) => void;
@@ -54,7 +55,7 @@ export function PaymentSuccess({ onNavigate }: PaymentSuccessProps) {
 
     setVerificationState('checking');
 
-    fetch('/.netlify/functions/flutterwave-verify', {
+    fetch(functionUrl('flutterwave-verify'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ transaction_id: txId }),

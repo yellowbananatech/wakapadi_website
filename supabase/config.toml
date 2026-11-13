@@ -22,3 +22,24 @@ schema_paths = ["./db/migrations/*.sql"]
 [functions.api]
 verify_jwt = false
 entrypoint = "./functions/api/index.tsx"
+
+[functions.flutterwave-init]
+verify_jwt = false
+
+[functions.flutterwave-verify]
+verify_jwt = false
+
+[functions.flutterwave-webhook]
+verify_jwt = false
+
+[functions.paystack-init]
+verify_jwt = false
+
+[functions.paystack-webhook]
+verify_jwt = false
+
+[functions.contact-submit]
+verify_jwt = false
+
+[functions.geo-country]
+verify_jwt = false
